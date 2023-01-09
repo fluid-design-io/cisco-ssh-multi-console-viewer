@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Command Output</title>
+    <link
+      href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-gray-100 h-screen font-sans">
+    <div class="container mx-auto p-6">
+      <h1 class="text-2xl font-bold mb-6">Command Output</h1>
+      <div
+        class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 grid"
+        style="grid-template-columns: repeat({{ output|length }}, 1fr)"
+      >
+        {% for host, commands in output.items() %}
+        <div class="mb-4">
+          <h2 class="text-xl font-bold mb-2">{{ host }}</h2>
+          <div class="divide-y divide-gray-100">
+            <table class="table-auto w-full">
+              <thead>
+                <tr>
+                  <th class="px-4 py-2">Command</th>
+                  <th class="px-4 py-2">Output</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for command in commands %}
+                <tr>
+                  <td class="border px-4 py-2">{{ command.command }}</td>
+                  <td class="border px-4 py-2">
+                    <pre
+                      class="text-gray-700 font-mono leading-tight py-4 text-left flex-grow whitespace-pre-line overflow-auto"
+                    >
+                            {{ command.output }}
+                          </pre
+                    >
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      <div class="flex items-center justify-between">
+        <a
+          href="/"
+          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        >
+          Back to home
+        </a>
+      </div>
+    </div>
+  </body>
+</html>

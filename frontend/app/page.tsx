@@ -95,9 +95,19 @@ export default function Home() {
         },
       });
       if (res.ok) {
-        const data = await res.json();
+        const data = (await res.json()) as CommandResultType;
         // add the data to the existing commandResult
-        setCommandResult({ ...commandResult, ...data });
+        const prev = commandResult;
+        // merge the new data with the existing data
+        const newResult = Object.keys(data).reduce((acc, key) => {
+          if (prev[key]) {
+            acc[key] = [...data[key], ...prev[key]];
+          } else {
+            acc[key] = data[key];
+          }
+          return acc;
+        }, {} as CommandResultType);
+        setCommandResult(newResult);
       } else {
         console.log('error');
       }

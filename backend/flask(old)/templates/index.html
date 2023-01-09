@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Cisco IOS Device Control</title>
+    <link
+      href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-gray-100 h-screen font-sans">
+    <div class="container mx-auto p-6">
+      <h1 class="text-2xl font-bold mb-6">Cisco IOS Device Control</h1>
+      <form
+        action="/command"
+        method="post"
+        class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+        id="form"
+      >
+        <div class="mb-4">
+          <label
+            class="block text-gray-700 text-sm font-bold mb-2"
+            for="device_count"
+            >Number of devices:</label
+          >
+          <input
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="device_count"
+            type="number"
+            name="device_count"
+            onchange="updateForm()"
+            value="1"
+          />
+        </div>
+        <div
+          id="device_fields"
+          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+        >
+          <div>
+            <div class="mb-4">
+              <label
+                class="block text-gray-700 text-sm font-bold mb-2"
+                for="device_1_hostname"
+                >Device 1 Hostname:</label
+              >
+              <input
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="device_1_hostname"
+                type="text"
+                name="device_1_hostname"
+                placeholder="hostname or IP address"
+              />
+            </div>
+            <div class="mb-4">
+              <label
+                class="block text-gray-700 text-sm font-bold mb-2"
+                for="device_1_username"
+                >Device 1 Username:</label
+              >
+              <input
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="device_1_username"
+                type="text"
+                name="device_1_username"
+                placeholder="username"
+              />
+            </div>
+            <div class="mb-4">
+              <label
+                class="block text-gray-700 text-sm font-bold mb-2"
+                for="device_1_password"
+                >Device 1 Password:</label
+              >
+              <input
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="device_1_password"
+                type="password"
+                name="device_1_password"
+                placeholder="password"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="mb-4">
+          <label
+            class="block text-gray-700 text-sm font-bold mb-2"
+            for="commands"
+            >Commands:</label
+          >
+          <textarea
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="commands"
+            name="commands"
+            rows="10"
+            cols="50"
+          ></textarea>
+        </div>
+        <div class="flex items-center justify-between">
+          <button
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            type="submit"
+          >
+            Run command
+          </button>
+        </div>
+      </form>
+    </div>
+    <script>
+      // A function to store input data in local storage
+
+      function storeInput(id, value) {
+        localStorage.setItem(id, value);
+      }
+
+      // A function to get value from local storage
+
+      function getStoredValue(id) {
+        var value = localStorage.getItem(id);
+        if (value) {
+          document.getElementById(id).value = value;
+        }
+      }
+
+      function updateForm() {
+        var deviceCount = document.getElementById("device_count").value;
+        var deviceFields = document.getElementById("device_fields");
+        deviceFields.innerHTML = "";
+        storeInput("device_count", deviceCount);
+        for (var i = 1; i <= deviceCount; i++) {
+          deviceFields.innerHTML += `
+                <div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="device_${i}_hostname">Device ${i} Hostname:</label>
+                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="device_${i}_hostname" type="text" name="device_${i}_hostname" placeholder="hostname or IP address" onchange="storeInput('device_${i}_hostname', this.value)">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="device_${i}_username">Device ${i} Username:</label>
+                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="device_${i}_username" type="text" name="device_${i}_username" placeholder="username" onchange="storeInput('device_${i}_username', this.value)">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="device_${i}_password">Device ${i} Password:</label>
+                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="device_${i}_password" type="password" name="device_${i}_password" placeholder="password" onchange="storeInput('device_${i}_password', this.value)">
+                    </div>
+                </div>
+                `;
+        }
+        for (var i = 1; i <= deviceCount; i++) {
+          getStoredValue("device_" + i + "_hostname");
+          getStoredValue("device_" + i + "_username");
+          getStoredValue("device_" + i + "_password");
+        }
+      }
+
+      // A function to restore input data from local storage
+
+      function restoreInput() {
+        var deviceCount = localStorage.getItem("device_count");
+        if (deviceCount) {
+          document.getElementById("device_count").value = deviceCount;
+          updateForm();
+        }
+        var commands = localStorage.getItem("commands");
+        if (commands) {
+          document.getElementById("commands").value = commands;
+        }
+      }
+
+      // run restoreInput() when the form is loaded
+
+      restoreInput();
+    </script>
+  </body>
+</html>
