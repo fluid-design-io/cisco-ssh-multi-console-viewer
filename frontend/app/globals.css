@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+
+@layer base {
+  html {
+    @apply font-primary;
+  }
+}
+@layer utilities {
+  .ProseMirror p.is-editor-empty:first-child::before {
+    color: #adb5bd;
+    content: attr(data-placeholder);
+    float: left;
+    height: 1em;
+    pointer-events: none;
+  }
+  .ProseMirror > * + * {
+    margin-top: 0.5em;
+  }
+}
