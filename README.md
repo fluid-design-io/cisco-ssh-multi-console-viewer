@@ -4,13 +4,15 @@ A SSH based smart CLI for Cisco IOS devices.
 
 ## Features
 
-- Allows send same commands to multiple Cisco devices
-- Code templates to help you get actions you want right away
+- Allows send same commands to multiple Cisco devices.
+- Code templates to help you get actions you want right away.
 - Code highlights: if a user input is needed, part of the code will highlight indicate user input with descriptions to better help user understand the purpose of the field.
-- Generates beautiful results with table
-- Easy to copy and past results
-- Restore code upon refreshing the browser
-- Elegant UI & dark mode & mobile responsive
+- Multiprocess support, now the app can handle up to 4 devices at the same time.
+- Generates beautiful results with table.
+- Save outputs as txt, json, or csv format.
+- Easy to copy and past results.
+- Restore code upon refreshing the browser.
+- Elegant UI & dark mode & mobile responsive.
 
 ## Demo Video
 
