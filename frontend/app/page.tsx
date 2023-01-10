@@ -4,6 +4,7 @@ import {
   Alert,
   AlertTitle,
   AppBar,
+  Button,
   Collapse,
   FormControl,
   FormHelperText,
@@ -33,6 +34,7 @@ import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
 import AttachmentIcon from '@mui/icons-material/Attachment';
 import { getCookie, setCookie } from 'cookies-next';
 import { CommandResultType, ResultTable } from './ResultTable';
+import { ResultOptions } from './ResultOptions';
 
 export default function Home() {
   const [numberOfDevices, setNumberOfDevices] = useState(1);
@@ -46,8 +48,11 @@ export default function Home() {
 
   const handleKeyDown = (e: KeyboardEvent) => {
     if ((e.key === 'Enter' && e.ctrlKey) || (e.key === 'Enter' && e.metaKey)) {
-      console.log('ctrl+enter');
       submitButtonRef.current?.click();
+    }
+    // if command + b is pressed, toggle collpase
+    if ((e.key === 'b' && e.ctrlKey) || (e.key === 'b' && e.metaKey)) {
+      toggleCollapsed();
     }
   };
 
@@ -108,6 +113,8 @@ export default function Home() {
           return acc;
         }, {} as CommandResultType);
         setCommandResult(newResult);
+        // Set to local storage
+        localStorage.setItem('command_result', JSON.stringify(newResult));
       } else {
         console.log('error');
       }
@@ -127,8 +134,12 @@ export default function Home() {
 
   useEffect(() => {
     const cookie = getCookie('number_of_devices');
+    const command_result = localStorage.getItem('command_result');
     if (cookie) {
       setNumberOfDevices(parseInt(cookie as string));
+    }
+    if (command_result) {
+      setCommandResult(JSON.parse(command_result));
     }
   }, []);
 
@@ -190,11 +201,14 @@ export default function Home() {
                       setCookie('number_of_devices', e.target.value.toString());
                     }}
                   >
-                    <MenuItem value='1'>1</MenuItem>
-                    <MenuItem value='2'>2</MenuItem>
-                    <MenuItem value='3'>3</MenuItem>
-                    <MenuItem value='4'>4</MenuItem>
-                    <MenuItem value='5'>5</MenuItem>
+                    {
+                      // create a loop of 10 menu items
+                      Array.from(Array(12).keys()).map((i) => (
+                        <MenuItem key={`number-of-devices-${i}`} value={i + 1}>
+                          {i + 1}
+                        </MenuItem>
+                      ))
+                    }
                   </Select>
                   <FormHelperText>Number of devices to configure</FormHelperText>
                 </FormControl>
@@ -233,6 +247,8 @@ export default function Home() {
               <Typography variant='h6' component='div' sx={{ flexGrow: 1, pl: 1 }}>
                 Results
               </Typography>
+              <Box flex={1} />
+              <ResultOptions result={commandResult} onClearResult={() => setCommandResult({})} />
             </Toolbar>
           </AppBar>
           <Box p={2}>

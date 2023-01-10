@@ -33,7 +33,7 @@ export const ResultTable = ({ result }: { result: CommandResultType }) => {
     return {
       id: key,
       label: key,
-      minWidth: 170,
+      minWidth: 200,
       align: 'center' as TableCellProps['align'],
     };
   });
@@ -46,7 +46,7 @@ export const ResultTable = ({ result }: { result: CommandResultType }) => {
         <Table stickyHeader aria-label='result table'>
           <TableHead>
             <TableRow>
-              <TableCell align={'left'} style={{ maxWidth: 120 }}>
+              <TableCell align={'left'} style={{ maxWidth: 120 }} className='sticky left-0 z-10'>
                 Commands
               </TableCell>
               {columns.map((column) => (
@@ -57,12 +57,23 @@ export const ResultTable = ({ result }: { result: CommandResultType }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, i) => {
-              if (result[columns[0].id][i].command === '') return;
+            {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((_, i) => {
+              // if (result[columns[0].id][i].command === '') return;
               return (
                 <TableRow hover role='checkbox' tabIndex={-1} key={`result-row-${i}`} sx={{ height: '1px' }}>
-                  <TableCell align={'left'} style={{ maxWidth: 120, height: 'inherit' }}>
-                    {result[columns[0].id][i].command}
+                  <TableCell
+                    align={'left'}
+                    style={{
+                      maxWidth: 120,
+                      height: 'inherit',
+                      verticalAlign: 'top',
+                    }}
+                    sx={{
+                      bgcolor: 'background.paper',
+                    }}
+                    className='sticky left-0 z-10'
+                  >
+                    <div className='sticky top-1/2'>{result[columns[0].id][i].command}</div>
                   </TableCell>
                   {columns.map((column) => {
                     const value = result[column.id][i].output;
@@ -95,17 +106,20 @@ const CodeButton = styled(ButtonBase)(({ theme }) => ({
   padding: theme.spacing(1),
   height: '100%',
   width: '100%',
+  cursor: 'auto',
 }));
 
 const CommandTableCell = ({ value, isErrorRow }: { value: string; isErrorRow: boolean }) => {
-  const [toolTipTitle, setToolTipTitle] = useState('Copy to clipboard');
+  const copyText = 'Double Click to copy';
+  const [toolTipTitle, setToolTipTitle] = useState(copyText);
+  const isCopied = toolTipTitle !== copyText;
   const handleCopyToClipboard = () => {
     navigator.clipboard.writeText(value);
 
     setToolTipTitle('Copied to clipboard');
     setTimeout(() => {
-      setToolTipTitle('Copy to clipboard');
-    }, 1000);
+      setToolTipTitle(copyText);
+    }, 1400);
   };
   return (
     <TableCell
@@ -115,18 +129,32 @@ const CommandTableCell = ({ value, isErrorRow }: { value: string; isErrorRow: bo
         padding: 0,
         height: 'inherit',
       }}
-      className={`hover:bg-sky-900/30 focus-within:bg-sky-900/30 transition-colors ${
-        isErrorRow && 'bg-red-100 dark:bg-red-900/30'
-      }`}
+      className={`hover:bg-sky-900/30 focus-within:bg-sky-900/30 transition-colors ${isErrorRow && 'bg-red-900/30'}`}
     >
       <Box className='h-full'>
-        <Tooltip title={toolTipTitle} placement='top'>
+        <Tooltip
+          title={toolTipTitle}
+          placement='top'
+          color='blue'
+          arrow
+          componentsProps={{
+            tooltip: {
+              sx: {
+                bgcolor: isCopied ? '#00a152' : 'common.grey',
+                '& .MuiTooltip-arrow': {
+                  color: isCopied ? '#00a152' : 'common.grey',
+                },
+              },
+            },
+          }}
+        >
           <CodeButton
-            onClick={handleCopyToClipboard}
+            onDoubleClick={handleCopyToClipboard}
             color='inherit'
-            className='grid place-items-start place-content-stretch'
+            className='grid place-items-start place-content-stretch select-text'
+            disableRipple
           >
-            <pre className='whitespace-pre-line hover:cursor-pointer text-left'>
+            <pre className='whitespace-pre-line text-left cursor-text'>
               <code>{value}</code>
             </pre>
           </CodeButton>

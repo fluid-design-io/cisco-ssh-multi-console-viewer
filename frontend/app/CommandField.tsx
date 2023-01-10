@@ -16,7 +16,9 @@ import {
   ListItemText,
   ListSubheader,
   Paper,
+  Popover,
   Popper,
+  Stack,
   TextField,
   Toolbar,
   Tooltip,
@@ -26,10 +28,10 @@ import Highlight from '@tiptap/extension-highlight';
 import { Content, getMarkRange } from '@tiptap/core';
 import { useEditor, EditorContent, BubbleMenu } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-import { forwardRef, useRef, useState } from 'react';
+import { forwardRef, useEffect, useRef, useState } from 'react';
 import { Extension } from '@tiptap/core';
 import { Plugin, PluginKey, TextSelection } from 'prosemirror-state';
-import { COMMAND_TYPE, presetCommands } from '../lib/presetCommands';
+import { COMMAND_TYPE, DEVICES, presetCommands } from '../lib/presetCommands';
 import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
 import { useCollapsed } from '../lib/useStore';
 import Placeholder from '@tiptap/extension-placeholder';
@@ -146,6 +148,10 @@ export const CommandField = forwardRef(
     const [isSearchFocused, setIsSearchFocused] = useState(false);
     const filterButtonRef = useRef<HTMLButtonElement>(null);
     const [isFilterOpen, setIsFilterOpen] = useState(false);
+    const [filterOptions, setFilterOptions] = useState({
+      category: Object.values(COMMAND_TYPE),
+      device: Object.values(DEVICES),
+    });
     const [helperText, setHelperText] = useState('');
     const [checked, setChecked] = useState<string[]>([]);
 
@@ -241,14 +247,33 @@ export const CommandField = forwardRef(
       }
 
       setChecked(newChecked);
+      setCookie('commandFilterChecked', newChecked.join(','));
     };
 
-    const commands = presetCommands.filter(
-      (command) =>
-        command.name.toLowerCase().includes(searchCommand.toLowerCase()) ||
-        command.description.toLowerCase().includes(searchCommand.toLowerCase())
-    );
+    useEffect(() => {
+      const commandFilterCheckedCookie = getCookie('commandFilterChecked') as string | undefined;
+      if (commandFilterCheckedCookie) {
+        setChecked(commandFilterCheckedCookie.split(','));
+      } else {
+        const commandFilterValues = Object.values(COMMAND_TYPE).concat(Object.values(DEVICES));
+        setChecked(commandFilterValues);
+      }
+    }, []);
 
+    const commands = presetCommands
+      .filter(
+        (command) =>
+          command.name.toLowerCase().includes(searchCommand.toLowerCase()) ||
+          command.description.toLowerCase().includes(searchCommand.toLowerCase())
+      )
+      .filter((command) => {
+        if (
+          checked.includes(command.type as string) &&
+          checked.some((c) => command.availableDevices.includes(c as string))
+        ) {
+          return true;
+        }
+      });
     return (
       <Grid2 container p={0}>
         <Grid2 xs={12} md={collapsed ? 12 : 4} order={collapsed ? 1 : 0}>
@@ -265,7 +290,6 @@ export const CommandField = forwardRef(
                     <TextField
                       hiddenLabel
                       id='search-command'
-                      defaultValue='Small'
                       variant='filled'
                       size='small'
                       value={searchCommand}
@@ -308,56 +332,92 @@ export const CommandField = forwardRef(
                   >
                     <ClearIcon />
                   </IconButton>
-                  <Popper
+
+                  <Popover
                     open={isFilterOpen}
                     anchorEl={filterButtonRef.current}
-                    role={undefined}
-                    placement='top-end'
-                    transition
-                    disablePortal
+                    anchorOrigin={{
+                      vertical: 'bottom',
+                      horizontal: 'left',
+                    }}
+                    sx={{
+                      width: '100%',
+                      maxWidth: 520,
+                    }}
                   >
-                    {({ TransitionProps, placement }) => (
-                      <Grow
-                        {...TransitionProps}
-                        style={{
-                          transformOrigin: 'right top',
-                        }}
-                      >
-                        <Paper>
-                          <ClickAwayListener onClickAway={() => setIsFilterOpen(false)}>
-                            <List
-                              subheader={
-                                <ListSubheader component='div' id='nested-list-subheader'>
-                                  Filter by category
-                                </ListSubheader>
-                              }
-                              sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
-                              aria-label='filter by category'
-                            >
-                              {Object.keys(COMMAND_TYPE).map((value) => {
-                                return (
-                                  <ListItem key={value} sx={{ p: 0 }}>
-                                    <ListItemButton role={undefined} onClick={handleToggle(value)} dense>
-                                      <ListItemIcon>
-                                        <Checkbox
-                                          edge='start'
-                                          checked={checked.indexOf(value) !== -1}
-                                          tabIndex={-1}
-                                          disableRipple
-                                          inputProps={{ 'aria-labelledby': value }}
-                                        />
-                                      </ListItemIcon>
-                                      <ListItemText id={value} primary={value} className='capitalize' />
-                                    </ListItemButton>
-                                  </ListItem>
-                                );
-                              })}
-                            </List>
-                          </ClickAwayListener>
-                        </Paper>
-                      </Grow>
-                    )}
-                  </Popper>
+                    <ClickAwayListener onClickAway={() => setIsFilterOpen(false)}>
+                      <Stack direction='row' spacing={2} sx={{ bgcolor: 'background.paper', width: '100vw' }}>
+                        <List
+                          subheader={
+                            <ListSubheader component='div' id='filter-by-cateogry-list'>
+                              Filter by category
+                            </ListSubheader>
+                          }
+                          sx={{
+                            width: '100%',
+                            maxWidth: 200,
+                            bgcolor: 'background.paper',
+                            maxHeight: 360,
+                            overflow: 'auto',
+                          }}
+                          aria-label='filter by category'
+                        >
+                          {filterOptions.category.map((value) => {
+                            return (
+                              <ListItem key={value} sx={{ p: 0 }}>
+                                <ListItemButton role={undefined} onClick={handleToggle(value)} dense>
+                                  <ListItemIcon>
+                                    <Checkbox
+                                      edge='start'
+                                      checked={checked.indexOf(value) !== -1}
+                                      tabIndex={-1}
+                                      disableRipple
+                                      inputProps={{ 'aria-labelledby': value }}
+                                    />
+                                  </ListItemIcon>
+                                  <ListItemText id={value} primary={value} className='capitalize' />
+                                </ListItemButton>
+                              </ListItem>
+                            );
+                          })}
+                        </List>
+                        <List
+                          subheader={
+                            <ListSubheader component='div' id='filter-by-device-list'>
+                              Filter by device
+                            </ListSubheader>
+                          }
+                          sx={{
+                            width: '100%',
+                            maxWidth: 320,
+                            bgcolor: 'background.paper',
+                            maxHeight: 360,
+                            overflow: 'auto',
+                          }}
+                          aria-label='filter by category'
+                        >
+                          {filterOptions.device.map((value) => {
+                            return (
+                              <ListItem key={value} sx={{ p: 0 }}>
+                                <ListItemButton role={undefined} onClick={handleToggle(value)} dense>
+                                  <ListItemIcon>
+                                    <Checkbox
+                                      edge='start'
+                                      checked={checked.indexOf(value) !== -1}
+                                      tabIndex={-1}
+                                      disableRipple
+                                      inputProps={{ 'aria-labelledby': value }}
+                                    />
+                                  </ListItemIcon>
+                                  <ListItemText id={value} primary={value} className='capitalize' />
+                                </ListItemButton>
+                              </ListItem>
+                            );
+                          })}
+                        </List>
+                      </Stack>
+                    </ClickAwayListener>
+                  </Popover>
                   {!isSearchFocused && (
                     <IconButton
                       aria-label='search'
@@ -376,32 +436,6 @@ export const CommandField = forwardRef(
                 </Box>
               </Toolbar>
             </AppBar>
-            {/*               <List sx={{ maxHeight: 320, overflow: "auto", pt: 6 }}>
-                {presetCommands
-                  .filter(
-                    (command) =>
-                      command.name.toLowerCase().includes(searchCommand.toLowerCase()) ||
-                      command.description.toLowerCase().includes(searchCommand.toLowerCase())
-                  )
-                  .map((command) => (
-                    <CommandItem
-                      key={command.name}
-                      command={command}
-                      onClick={() =>
-                        editor
-                          ?.chain()
-                          .focus()
-                          .insertContent(
-                            inserCommand({
-                              command: command.command,
-                              commandReplace: command.commandReplace as any,
-                            })
-                          )
-                          .run()
-                      }
-                    />
-                  ))}
-              </List> */}
             <Box sx={{ width: '100%', height: 320 }}>
               <Virtuoso
                 style={{ height: '400px' }}

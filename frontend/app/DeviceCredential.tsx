@@ -3,51 +3,73 @@ import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
 import { useEffect, useRef, useState } from 'react';
 import { useCollapsed } from '../lib/useStore';
 import { IpAddressSchema } from './form-schema';
-import { getCookies, setCookie } from 'cookies-next';
 import LaptopIcon from '@mui/icons-material/Laptop';
+import { EditableElement } from '../lib/EditableElement';
 
 export const DeviceCredential = ({ index }: { index: number }) => {
-  const cookies = getCookies();
-  const [ip, setIp] = useState('');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
   const [ipError, setIpError] = useState('');
-  const [enabled, setEnabled] = useState(true);
+  const [deviceInfo, setDeviceInfo] = useState({
+    ip: '',
+    username: '',
+    password: '',
+    enabled: true,
+    deviceTitle: '',
+  });
   const { collapsed } = useCollapsed();
   const ipInputRef = useRef<HTMLInputElement>(null);
 
+  // convert setCookie to localStorage and make all variables into one object
+  // then use a useEffect to set the values from localStorage
+
+  type DeviceInfo = typeof deviceInfo;
+
+  const setDeviceInfoToStorage = (deviceInfo: DeviceInfo) => {
+    setDeviceInfo(deviceInfo);
+    localStorage.setItem(`device-info-${index}`, JSON.stringify(deviceInfo));
+  };
+
+  const getDeviceInfo = () => {
+    const deviceInfo = localStorage.getItem(`device-info-${index}`);
+    if (deviceInfo) {
+      return JSON.parse(deviceInfo);
+    }
+    return null;
+  };
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setDeviceInfoToStorage({ ...deviceInfo, enabled: event.target.checked });
+  };
+  const handleChangeDeviceTitle = (title: string) => {
+    if (title !== `Device ${index + 1}`) {
+      setDeviceInfoToStorage({ ...deviceInfo, deviceTitle: title });
+    }
+  };
+
   useEffect(() => {
-    const ip = cookies[`device-${index}-ip`];
-    const username = cookies[`device-${index}-username`];
-    const password = cookies[`device-${index}-password`];
-    if (ip) {
-      setIp(ip);
-    }
-    if (username) {
-      setUsername(username);
-    }
-    if (password) {
-      setPassword(password);
+    const deviceInfo = getDeviceInfo();
+    if (deviceInfo) {
+      setDeviceInfo(deviceInfo);
     }
   }, []);
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEnabled(event.target.checked);
-  };
+
   return (
-    <Grid2 xs={12} md={collapsed ? 4 : 12} lg={collapsed ? 12 : 4} xl={collapsed ? 12 : 3}>
+    <Grid2 xs={12} md={collapsed ? 4 : 12} lg={collapsed ? 12 : 4} xl={collapsed ? 6 : 2}>
       <Card sx={{ p: 0, overflow: 'hidden' }}>
         <AppBar elevation={1} position='static' color='transparent'>
           <Toolbar variant='dense'>
             <LaptopIcon />
             <Typography variant='h6' component='div' sx={{ flexGrow: 0, px: 1 }}>
-              Device {index + 1}
+              <EditableElement onChange={handleChangeDeviceTitle}>
+                <div style={{ outline: 'none' }} key={`edit-title-${index}`}>
+                  {deviceInfo.deviceTitle || `Device ${index + 1}`}
+                </div>
+              </EditableElement>
             </Typography>
 
             <Box sx={{ flexGrow: 1 }} />
 
-            <Tooltip title={`Device ${enabled ? 'enabled' : 'disabled'}`} placement='top'>
+            <Tooltip title={`Device ${deviceInfo.enabled ? 'enabled' : 'disabled'}`} placement='top'>
               <Switch
-                checked={enabled}
+                checked={deviceInfo.enabled}
                 onChange={handleChange}
                 inputProps={{ 'aria-label': 'controlled' }}
                 name={`device-${index}-enabled`}
@@ -67,18 +89,17 @@ export const DeviceCredential = ({ index }: { index: number }) => {
             autoFocus={index === 0}
             type='text'
             inputRef={ipInputRef}
-            value={ip}
+            value={deviceInfo.ip}
             onChange={(e) => {
-              setIp(e.target.value);
+              setDeviceInfoToStorage({ ...deviceInfo, ip: e.target.value });
             }}
-            onBlur={() => {
+            onBlur={(e) => {
               try {
-                IpAddressSchema.parse(ip);
+                IpAddressSchema.parse(e.target.value);
                 setIpError('');
-                setCookie(`device-${index}-ip`, ip);
               } catch (e: any) {
                 const error = JSON.parse(e);
-                setIpError(error[0]?.message);
+                setIpError(error.errors[0]);
               }
             }}
             error={!!ipError}
@@ -92,11 +113,10 @@ export const DeviceCredential = ({ index }: { index: number }) => {
             label='Username'
             variant='outlined'
             type='text'
-            value={username}
+            value={deviceInfo.username}
             onChange={(e) => {
-              setUsername(e.target.value);
+              setDeviceInfoToStorage({ ...deviceInfo, username: e.target.value });
             }}
-            onBlur={() => setCookie(`device-${index}-username`, username)}
             autoComplete='off'
           />
           <TextField
@@ -107,11 +127,10 @@ export const DeviceCredential = ({ index }: { index: number }) => {
             label='Password'
             variant='outlined'
             type='password'
-            value={password}
+            value={deviceInfo.password}
             onChange={(e) => {
-              setPassword(e.target.value);
+              setDeviceInfoToStorage({ ...deviceInfo, password: e.target.value });
             }}
-            onBlur={() => setCookie(`device-${index}-password`, password)}
             autoComplete='off'
           />
         </Stack>
