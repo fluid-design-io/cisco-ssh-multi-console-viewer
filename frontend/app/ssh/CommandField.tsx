@@ -7,7 +7,6 @@ import {
   Checkbox,
   ClickAwayListener,
   Collapse,
-  Grow,
   IconButton,
   List,
   ListItem,
@@ -17,7 +16,6 @@ import {
   ListSubheader,
   Paper,
   Popover,
-  Popper,
   Stack,
   TextField,
   Toolbar,
@@ -31,9 +29,7 @@ import StarterKit from '@tiptap/starter-kit';
 import { forwardRef, useEffect, useRef, useState } from 'react';
 import { Extension } from '@tiptap/core';
 import { Plugin, PluginKey, TextSelection } from 'prosemirror-state';
-import { COMMAND_TYPE, DEVICES, presetCommands } from '../lib/presetCommands';
 import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
-import { useCollapsed } from '../lib/useStore';
 import Placeholder from '@tiptap/extension-placeholder';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import SendIcon from '@mui/icons-material/Send';
@@ -43,6 +39,8 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import ClearIcon from '@mui/icons-material/Clear';
 import { Virtuoso } from 'react-virtuoso';
 import { getCookie, setCookie } from 'cookies-next';
+import { COMMAND_TYPE, DEVICES, presetCommands } from 'lib/presetCommands';
+import { useCollapsed } from 'lib/useStore';
 
 const convertArray = (arr: string[] | string) => {
   if (typeof arr === 'string') {

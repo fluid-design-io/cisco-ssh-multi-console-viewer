@@ -1,8 +1,8 @@
 'use client';
 
 import { FormControlLabel, Switch } from '@mui/material';
-import { darkTheme } from '../lib/themes';
-import { useTheme } from '../lib/useTheme';
+import { darkTheme } from 'lib/themes';
+import { useTheme } from 'lib/useTheme';
 
 export const DarkModeToggle = () => {
   const { theme, toggleTheme } = useTheme();

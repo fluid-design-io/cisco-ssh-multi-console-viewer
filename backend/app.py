@@ -1,12 +1,15 @@
 from typing import List
-import fastapi
+from fastapi import FastAPI, File, UploadFile, Form, Response
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from netmiko import ConnectHandler
 import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
 import multiprocessing
+from lib.ap_version_convert import ap_version_convert
+import tarfile
 
-app = fastapi.FastAPI()
+app = FastAPI()
 
 
 class Device(BaseModel):
@@ -46,7 +49,7 @@ def execute_command(execute_commands: ExecuteCommand):
     device_commands_pairs = [(device, commands) for device in device_list]
 
     # Create a pool of workers with 4 processes
-    with multiprocessing.Pool(4) as pool:
+    with multiprocessing.Pool(10) as pool:
         # Map the `execute_command_on_device` function over the list of tuples
         results = pool.starmap(execute_command_on_device,
                                device_commands_pairs)
@@ -83,7 +86,16 @@ def execute_command_on_device(device, commands):
     return device_output
 
 
-# Run the app
+@app.post("/ap-convert", response_class=FileResponse)
+async def upload(file: UploadFile, newFileName: str = Form(), newImageVersion: str = Form(), versionTemplate: str = Form()) -> Response:
+
+    return ap_version_convert(file, newImageVersion, newFileName)
+
+
+@app.get("/download/{file_name}")
+async def download_file(file_name: str, folder: str = "output"):
+    file_path = f"{folder}/{file_name}"
+    return FileResponse(file_path, media_type="application/octet-stream", filename=file_name)
 
 
 if __name__ == "__main__":

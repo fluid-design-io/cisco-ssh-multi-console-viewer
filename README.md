@@ -1,6 +1,20 @@
-# Cisco SSH Multi Console Viewer
+# Cisco Lab Admin Essentials
 
-A SSH based smart CLI for Cisco IOS devices. 
+## Introduction
+
+A web app that allows you to automate many task in a beautiful effeciant way. It is built with Python FastAPI, Next.js, MUI and TailwindCSS.
+
+## Installation
+
+```
+# Frontend
+yarn && yarn build
+yarn start
+
+# Backend
+pip install -r requirements.txt
+uvicorn main:app --reload
+```
 
 ## Features
 

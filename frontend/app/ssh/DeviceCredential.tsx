@@ -1,10 +1,10 @@
 import { AppBar, Box, Card, Stack, Switch, TextField, Toolbar, Tooltip, Typography } from '@mui/material';
 import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
 import { useEffect, useRef, useState } from 'react';
-import { useCollapsed } from '../lib/useStore';
-import { IpAddressSchema } from './form-schema';
+import { useCollapsed } from 'lib/useStore';
+import { IpAddressSchema } from '../../lib/form-schema';
 import LaptopIcon from '@mui/icons-material/Laptop';
-import { EditableElement } from '../lib/EditableElement';
+import { EditableElement } from 'lib/EditableElement';
 
 export const DeviceCredential = ({ index }: { index: number }) => {
   const [ipError, setIpError] = useState('');

@@ -33,7 +33,7 @@ export const ResultTable = ({ result }: { result: CommandResultType }) => {
     return {
       id: key,
       label: key,
-      minWidth: 200,
+      minWidth: 600,
       align: 'center' as TableCellProps['align'],
     };
   });
@@ -76,7 +76,7 @@ export const ResultTable = ({ result }: { result: CommandResultType }) => {
                     <div className='sticky top-1/2'>{result[columns[0].id][i].command}</div>
                   </TableCell>
                   {columns.map((column) => {
-                    const value = result[column.id][i].output;
+                    const value = result[column.id][i]?.output || 'Not found';
                     // if % Invalid is in the value
                     const isErrorRow = value.includes('% Invalid');
                     return <CommandTableCell key={column.id} {...{ value, isErrorRow }} />;
@@ -154,7 +154,7 @@ const CommandTableCell = ({ value, isErrorRow }: { value: string; isErrorRow: bo
             className='grid place-items-start place-content-stretch select-text'
             disableRipple
           >
-            <pre className='whitespace-pre-line text-left cursor-text'>
+            <pre className='whitespace-pre-wrap break-all text-left cursor-text'>
               <code>{value}</code>
             </pre>
           </CodeButton>
