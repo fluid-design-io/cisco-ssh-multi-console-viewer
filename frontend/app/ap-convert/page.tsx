@@ -6,6 +6,7 @@ import {
   Box,
   Button,
   Collapse,
+  Fade,
   FormHelperText,
   LinearProgress,
   Paper,
@@ -194,22 +195,24 @@ altboot_fallback: 1`;
                 ))}
               </div>
             </Paper>
-            <Paper sx={{ p: 2 }}>
-              <Stack direction='row' alignItems='center' spacing={1}>
-                <InsertDriveFileTwoToneIcon />
-                <Typography variant='h5'>{newFileName}</Typography>
-              </Stack>
-              <Box mt={2}>
-                <Button
-                  href={`http://localhost:8000/download/${newFileName}?folder=output`}
-                  variant='contained'
-                  color='success'
-                  disabled={acceptedFiles.length === 0 || fileRejected || !isComplete}
-                >
-                  Download
-                </Button>
-              </Box>
-            </Paper>
+            <Fade in={isComplete}>
+              <Paper sx={{ p: 2 }}>
+                <Stack direction='row' alignItems='center' spacing={1}>
+                  <InsertDriveFileTwoToneIcon />
+                  <Typography variant='h5'>{newFileName}</Typography>
+                </Stack>
+                <Box mt={2}>
+                  <Button
+                    href={`http://localhost:8000/download/${newFileName}?folder=output`}
+                    variant='contained'
+                    color='success'
+                    disabled={acceptedFiles.length === 0 || fileRejected || !isComplete}
+                  >
+                    Download
+                  </Button>
+                </Box>
+              </Paper>
+            </Fade>
           </Stack>
         </Grid2>
       </Grid2>
