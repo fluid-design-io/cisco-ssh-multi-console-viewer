@@ -1,3 +1,4 @@
 # Output files
 
 /backend/output
+__pycache__

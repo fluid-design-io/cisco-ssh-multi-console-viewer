@@ -7,7 +7,6 @@ import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
 import multiprocessing
 from lib.ap_version_convert import ap_version_convert
-import tarfile
 
 app = FastAPI()
 

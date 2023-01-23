@@ -13,14 +13,14 @@ yarn start
 
 # Backend
 pip install -r requirements.txt
-uvicorn main:app --reload
+uvicorn app:app --reload
 ```
 
 ## Apps
 
 | App                                                                                          | Description                                                                                        |
-|----------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------|
-| SSH multi-console viewer | A web-based SSH multi-console viewer that allows you to connect to multiple devices at once.|
+| -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| SSH multi-console viewer                                                                     | A web-based SSH multi-console viewer that allows you to connect to multiple devices at once.       |
 | A web-based SSH multi-console viewer that allows you to connect to multiple devices at once. | A web-based AP version converter that allows you to convert AP version from one format to another. |
 
 ## Features
