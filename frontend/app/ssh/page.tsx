@@ -68,6 +68,7 @@ export default function Home() {
           hostname: data[`device-${i}-ip`],
           username: data[`device-${i}-username`],
           password: data[`device-${i}-password`],
+          secret: data[`device-${i}-secret`],
         });
       }
     }

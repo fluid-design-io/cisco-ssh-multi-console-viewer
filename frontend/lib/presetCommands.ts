@@ -391,6 +391,25 @@ export const presetCommands = [
     description: 'Upgrade AP image',
     type: COMMAND_TYPE.config,
   },
+  {
+    name: 'FT+',
+    command: [
+      'show dot11 clients',
+      'dev',
+      'cnss_diag -p -c | grep "ASR*"> asr.log &',
+      'wcp_write wcp/dot11_client_sm.add_asr 1 0 {{client_mac}} 20000 20000 2000 0 0 1',
+    ],
+    commandReplace: {
+      client_mac: {
+        sign: '{{client_mac}}',
+        description: 'The Client MAC address used for FT+ identification, use show dot11 clients to see the AID',
+        schema: z.string(),
+      },
+    },
+    availableDevices: [DEVICES.ap],
+    description: 'Starts FT+ process with dev image build',
+    type: COMMAND_TYPE.config,
+  },
 ];
 
 export type CommandReplaceType = typeof COMMAND_REPLACE;

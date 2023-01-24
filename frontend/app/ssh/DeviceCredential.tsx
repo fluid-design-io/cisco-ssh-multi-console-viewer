@@ -12,6 +12,7 @@ export const DeviceCredential = ({ index }: { index: number }) => {
     ip: '',
     username: '',
     password: '',
+    secret: '',
     enabled: true,
     deviceTitle: '',
   });
@@ -130,6 +131,20 @@ export const DeviceCredential = ({ index }: { index: number }) => {
             value={deviceInfo.password}
             onChange={(e) => {
               setDeviceInfoToStorage({ ...deviceInfo, password: e.target.value });
+            }}
+            autoComplete='off'
+          />
+          <TextField
+            required
+            fullWidth
+            id={`device-${index}-secret`}
+            name={`device-${index}-secret`}
+            label='Secret'
+            variant='outlined'
+            type='password'
+            value={deviceInfo.secret}
+            onChange={(e) => {
+              setDeviceInfoToStorage({ ...deviceInfo, secret: e.target.value });
             }}
             autoComplete='off'
           />

@@ -11,10 +11,12 @@ from lib.ap_version_convert import ap_version_convert
 app = FastAPI()
 
 
+# This class represents a device. It contains its hostname, username, and password.
 class Device(BaseModel):
     hostname: str
     username: str
     password: str
+    secret: str
 
 
 class ExecuteCommand(BaseModel):
@@ -69,8 +71,10 @@ def execute_command_on_device(device, commands):
         "host": device.hostname,
         "username": device.username,
         "password": device.password,
+        "secret": device.secret,  # enable password
     }
     with ConnectHandler(**conn) as ssh:
+        ssh.enable()
         for command in commands.split("\n"):
             print(f'Executing command: {command} on {device.hostname}')
             # append the output to the dictionary with the key being the hostname

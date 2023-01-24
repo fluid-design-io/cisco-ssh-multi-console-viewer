@@ -262,7 +262,7 @@ export const CommandField = forwardRef(
       .filter(
         (command) =>
           command.name.toLowerCase().includes(searchCommand.toLowerCase()) ||
-          command.description.toLowerCase().includes(searchCommand.toLowerCase())
+          command.description?.toLowerCase()?.includes(searchCommand.toLowerCase())
       )
       .filter((command) => {
         if (
