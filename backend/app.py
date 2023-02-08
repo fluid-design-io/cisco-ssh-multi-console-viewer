@@ -1,5 +1,5 @@
 from typing import List
-from fastapi import FastAPI, File, UploadFile, Form, Response
+from fastapi import FastAPI, File, UploadFile, Form, Response, Request
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from netmiko import ConnectHandler
@@ -7,6 +7,10 @@ import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
 import multiprocessing
 from lib.ap_version_convert import ap_version_convert
+
+from qrcode import make, QRCode
+from qrcode.constants import ERROR_CORRECT_L
+from typing import Dict
 
 app = FastAPI()
 
@@ -99,6 +103,32 @@ async def upload(file: UploadFile, newFileName: str = Form(), newImageVersion: s
 async def download_file(file_name: str, folder: str = "output"):
     file_path = f"{folder}/{file_name}"
     return FileResponse(file_path, media_type="application/octet-stream", filename=file_name)
+
+
+@app.post("/qr-code/")
+async def create_qr_code(data: str, options: Dict[str, str] = {}):
+    qr = QRCode(error_correction=ERROR_CORRECT_L,
+                box_size=10, border=5
+                )
+    qr.add_data(data)
+    qr.make(fit=True)
+
+    if 'color' not in options:
+        options['color'] = "black"
+    if 'bg' not in options:
+        options['bg'] = "white"
+    if 'format' not in options:
+        options['format'] = "png"
+    img = qr.make_image(
+        back_color=options['bg'], fill_color=options['color'])
+    if options['format'] == "png":
+        img_file = img.save("qr.png")
+        return FileResponse("qr.png", media_type="image/png", filename="qr.png")
+    elif options['format'] == "svg":
+        img_file = img.save("qr.svg")
+        return FileResponse("qr.svg", media_type="image/svg+xml", filename="qr.svg")
+    else:
+        return "Invalid format"
 
 
 if __name__ == "__main__":

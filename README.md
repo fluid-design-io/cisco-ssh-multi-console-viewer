@@ -8,8 +8,8 @@ A web app that allows you to automate many task in a beautiful effeciant way. It
 
 ```
 # Frontend
-yarn && yarn build
-yarn start
+pnpm && pnpm build
+pnpm start
 
 # Backend
 pip install -r requirements.txt

@@ -16,9 +16,9 @@ import {
   Toolbar,
   Tooltip,
   Typography,
+  Box,
 } from '@mui/material';
 import Stack from '@mui/material/Stack';
-import { Box } from '@mui/system';
 import KeyboardIcon from '@mui/icons-material/Keyboard';
 import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
 import { useEffect, useRef, useState } from 'react';
