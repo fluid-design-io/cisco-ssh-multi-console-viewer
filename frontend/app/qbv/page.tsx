@@ -272,20 +272,19 @@ export default function Page() {
               </Toolbar>
             </AppBar>
             <CardContent
-              sx={{ py: '0 !important', minHeight: '12rem', height: '100vh', '& .md p': { my: '0 !important' } }}
+              sx={{
+                py: '0 !important',
+                minHeight: '12rem',
+                height: '100vh',
+                '& .md p': { my: '0 !important' },
+                '& .md hr': {
+                  borderTop: '2px dashed rgba(255,255,255,0.15)',
+                  borderRadius: '0.5rem',
+                },
+              }}
               className='max-h-[max(32rem,80vh)] scroll-smooth overflow-y-auto'
               ref={outputRef}
             >
-              {/* {data && (
-                <code lang='bash' className='w-full'>
-                  <pre
-                    ref={outputRef}
-                    className='h-screen py-4 my-0 max-h-[max(32rem,80vh)] scroll-smooth overflow-y-auto w-full whitespace-pre border-none bg-transparent text-xs font-medium outline-none text-white'
-                  >
-                    {data}
-                  </pre>
-                </code>
-              )} */}
               {data && (
                 <div className='md py-4 my-0 w-full text-xs text-white' dangerouslySetInnerHTML={{ __html: data }} />
               )}

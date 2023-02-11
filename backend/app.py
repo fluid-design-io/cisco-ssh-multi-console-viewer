@@ -14,7 +14,6 @@ from qrcode import make, QRCode
 from qrcode.constants import ERROR_CORRECT_L
 from typing import Dict
 
-import shutil
 from itertools import chain
 
 app = FastAPI()
@@ -32,10 +31,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-# remove output folder
-
-shutil.rmtree('output')
 
 
 @app.post("/execute")
@@ -105,6 +100,8 @@ async def download_file(file_name: str, folder: str = "output"):
 def generate_qbv(qbv_config: QBVconfig):
     # execute_qbv(config=qbv_config)
     return StreamingResponse(chain(execute_qbv(qbv_config)), media_type='text/plain')
+
+# Just for fun, not used in the app
 
 
 @app.post("/qr-code/")
