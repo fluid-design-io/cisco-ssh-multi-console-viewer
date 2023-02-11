@@ -15,9 +15,14 @@ const projects = [
     description: 'A web-based AP version converter that allows you to convert AP version from one format to another.',
     href: 'ap-convert',
   },
+  {
+    title: 'QBV validation',
+    description: 'QBV traffic generator and sniffer that allows you to validate QBV configuration.',
+    href: 'qbv',
+  },
 ];
 
-type ProjectType = typeof projects[0];
+type ProjectType = (typeof projects)[0];
 
 export default function Page() {
   return (

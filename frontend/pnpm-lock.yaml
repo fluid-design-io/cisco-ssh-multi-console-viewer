@@ -26,6 +26,7 @@ specifiers:
   eslint-config-next: 13.1.6
   file-saver: ^2.0.5
   jszip: ^3.10.1
+  marked: ^4.2.12
   next: 13.1.6
   postcss: ^8.4.21
   prosemirror-commands: ^1.5.0
@@ -65,6 +66,7 @@ dependencies:
   cookies-next: 2.1.1
   file-saver: 2.0.5
   jszip: 3.10.1
+  marked: 4.2.12
   next: 13.1.6_pjwopsidmaokadturxaafygjp4
   prosemirror-commands: 1.5.0
   prosemirror-dropcursor: 1.7.0
@@ -3036,6 +3038,12 @@ packages:
       linkify-it: 4.0.1
       mdurl: 1.0.1
       uc.micro: 1.0.6
+    dev: false
+
+  /marked/4.2.12:
+    resolution: {integrity: sha512-yr8hSKa3Fv4D3jdZmtMMPghgVt6TWbk86WQaWhDloQjRSQhMMYCAro7jP7VDJrjjdV8pxVxMssXS8B8Y5DZ5aw==}
+    engines: {node: '>= 12'}
+    hasBin: true
     dev: false
 
   /mdurl/1.0.1:

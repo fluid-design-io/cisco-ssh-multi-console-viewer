@@ -1,9 +1,9 @@
 // create a custom hook to use the theme using zustand
 
-import { Theme } from "@mui/material";
-import create from "zustand";
+import { Theme } from '@mui/material';
+import { create } from 'zustand';
 
-import { darkTheme, lightTheme } from "./themes";
+import { darkTheme, lightTheme } from './themes';
 
 type ThemeState = {
   theme: Theme;

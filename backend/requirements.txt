@@ -1,5 +1,9 @@
-fastapi==0.89.1
+backend==0.2.4.1
+fabric==3.0.0
+fastapi==0.90.0
 Flask==2.2.2
 netmiko==4.1.1
 pydantic==1.10.4
+python-dotenv==0.21.1
+qrcode==7.3.1
 uvicorn==0.20.0

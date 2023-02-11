@@ -19,7 +19,6 @@ export const DeviceCredential = ({ index }: { index: number }) => {
   const { collapsed } = useCollapsed();
   const ipInputRef = useRef<HTMLInputElement>(null);
 
-  // convert setCookie to localStorage and make all variables into one object
   // then use a useEffect to set the values from localStorage
 
   type DeviceInfo = typeof deviceInfo;

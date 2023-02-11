@@ -1,31 +1,23 @@
-from typing import List
+
+import os
 from fastapi import FastAPI, File, UploadFile, Form, Response, Request
-from fastapi.responses import FileResponse
-from pydantic import BaseModel
+from fastapi.responses import FileResponse, StreamingResponse
 from netmiko import ConnectHandler
 import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
 import multiprocessing
+from lib.classes import QBVconfig, DeivceConfig, Device, ExecuteCommand, QBVcommand
+from qbv.qbv import execute_qbv, qbv_model
 from lib.ap_version_convert import ap_version_convert
 
 from qrcode import make, QRCode
 from qrcode.constants import ERROR_CORRECT_L
 from typing import Dict
 
+import shutil
+from itertools import chain
+
 app = FastAPI()
-
-
-# This class represents a device. It contains its hostname, username, and password.
-class Device(BaseModel):
-    hostname: str
-    username: str
-    password: str
-    secret: str
-
-
-class ExecuteCommand(BaseModel):
-    commands: str
-    devices: List[Device]
 
 
 origins = [
@@ -40,6 +32,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# remove output folder
+
+shutil.rmtree('output')
 
 
 @app.post("/execute")
@@ -101,8 +97,14 @@ async def upload(file: UploadFile, newFileName: str = Form(), newImageVersion: s
 
 @app.get("/download/{file_name}")
 async def download_file(file_name: str, folder: str = "output"):
-    file_path = f"{folder}/{file_name}"
+    file_path = os.path.join(folder, file_name)
     return FileResponse(file_path, media_type="application/octet-stream", filename=file_name)
+
+
+@app.post('/qbv', response_model=str)
+def generate_qbv(qbv_config: QBVconfig):
+    # execute_qbv(config=qbv_config)
+    return StreamingResponse(chain(execute_qbv(qbv_config)), media_type='text/plain')
 
 
 @app.post("/qr-code/")

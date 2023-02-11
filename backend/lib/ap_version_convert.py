@@ -52,7 +52,10 @@ def ap_version_convert(file: UploadFile, newImageVersion, new_file_name) -> str:
     if not os.path.exists("output"):
         os.mkdir("output")
 
-    output_path = os.path.join("output", new_file_name)
+    if not os.path.exists('output/ap-convert'):
+        os.makedirs('output/ap-convert')
+
+    output_path = os.path.join("output", "ap-convert", new_file_name)
     tar = tarfile.open(output_path, "w")
     # for each file in the temp folder, add it to the new tar file
     print("Adding files to new tar file")

@@ -2,11 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
 @layer base {
   html {
-    @apply font-primary;
+    @apply font-primary scroll-smooth;
   }
 }
 @layer utilities {
