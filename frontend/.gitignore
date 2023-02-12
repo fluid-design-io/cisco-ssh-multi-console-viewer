@@ -38,3 +38,5 @@ next-env.d.ts
 .vscode
 
 ../backend/output
+.pnpm-lock.yaml
+.pnpm-debug.log
