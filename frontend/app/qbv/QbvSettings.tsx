@@ -21,10 +21,11 @@ import {
   Button,
 } from '@mui/material';
 import Grid2 from '@mui/material/Unstable_Grid2';
-import { defaultConfig, QBVconfig } from './page';
+import { QBVconfig } from './page';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useQbvCollapsed } from 'lib/useStore';
+import { defaultConfig } from 'lib/qbvConfig';
 
 export const QbvSettings = ({
   config,

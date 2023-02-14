@@ -166,7 +166,8 @@ def upload_to_tftp(device_ip, device_user, device_pw, folder, filename=None, tft
         if folder not in lines:
             tftp_conn.run(f"mkdir {folder}")
     # Transfer to TFTP server
-    path = os.path.join('output', 'qbv', filename)
+    # OR os.path.join('output', 'qbv', filename)
+    path = f'output/qbv/{filename}'
     tftp_conn.put(path, tftp_path+"/"+folder)
 
     print(
