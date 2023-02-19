@@ -18,9 +18,11 @@ class ExecuteCommand(BaseModel):
 
 
 class DeivceConfig(BaseModel):
+    type: str
     ip: str
     username: str
     password: str
+    sudo_password: str
 
 
 class QBVcommand(BaseModel):
@@ -30,17 +32,32 @@ class QBVcommand(BaseModel):
 
 class QBVOptions(BaseModel):
     # Either 'local' or 'tftp', where the file is stored
-    store: str
-    output: str
+    tftp: bool
     direction: str
+    output_folder: str
+
+
+class ApConnection(BaseModel):
+    ip: str
+    username: str
+    password: str
+    enable_password: str
 
 
 class QBVconfig(BaseModel):
+    ap_connection: ApConnection
+    ap_command: List[str]
     device_wifi: DeivceConfig
     device_eth: DeivceConfig
     device_tftp: DeivceConfig
     device_sniffer: DeivceConfig
-    ap_command: str
     server_commands: List[QBVcommand]
     station_commands: List[QBVcommand]
     options: QBVOptions
+
+
+class QBVApConfig(BaseModel):
+    ip: str
+    username: str
+    password: str
+    enable_password: str

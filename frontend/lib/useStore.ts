@@ -46,3 +46,76 @@ export const useQbvCollapsed = create<QbvCollapsedState>((set) => ({
     })),
   setQbvCollapsedCommands: (collapsed: boolean) => set(() => ({ qbvCollapsedCommands: collapsed })),
 }));
+
+/**
+ * ['Configure AP', 'WiFi', 'Ethernet', 'Sniffer', 'TFTP', 'Finish'];
+ * - step: the step name
+ * - isCompleted: boolean to check if the step is completed
+ * - isCurrent: boolean to check if the step is the current step
+ */
+export const useQbvSteps = create<QbvStepsState>((set) => ({
+  qbvSteps: [
+    { name: 'AP', isCompleted: false, isCurrent: true },
+    { name: 'WiFi', isCompleted: false, isCurrent: false },
+    { name: 'Ethernet', isCompleted: false, isCurrent: false },
+    { name: 'Sniffer', isCompleted: false, isCurrent: false },
+    { name: 'TFTP', isCompleted: false, isCurrent: false, isDisabled: true },
+    { name: 'Setup', isCompleted: false, isCurrent: false },
+  ],
+  setQbvSteps: (qbvSteps: any) => set(() => ({ qbvSteps })),
+  handleNext: () => {
+    set((state: { qbvSteps: QbvSteps[] }) => {
+      const { qbvSteps } = state;
+      const currentStep = qbvSteps.findIndex((step) => step.isCurrent);
+      qbvSteps[currentStep].isCurrent = false;
+      qbvSteps[currentStep].isCompleted = true;
+      qbvSteps[currentStep + 1].isCurrent = true;
+      return { qbvSteps };
+    });
+  },
+  handlePrevious: () => {
+    set((state: { qbvSteps: QbvSteps[] }) => {
+      const { qbvSteps } = state;
+      const currentStep = qbvSteps.findIndex((step) => step.isCurrent);
+      qbvSteps[currentStep].isCurrent = false;
+      qbvSteps[currentStep - 1].isCurrent = true;
+      return { qbvSteps };
+    });
+  },
+  handleStep: (index: number) => {
+    set((state: { qbvSteps: QbvSteps[] }) => {
+      const { qbvSteps } = state;
+      const currentStep = qbvSteps.findIndex((step) => step.isCurrent);
+      qbvSteps[currentStep].isCurrent = false;
+      qbvSteps[index].isCurrent = true;
+      return { qbvSteps };
+    });
+  },
+  isStarted: false,
+  handleStart: () => {
+    // set isStarted to true
+    set((state: { isStarted: boolean }) => ({ isStarted: true }));
+  },
+  handleStop: () => {
+    // set isStarted to false
+    set((state: { isStarted: boolean }) => ({ isStarted: false }));
+  },
+}));
+
+export type QbvStepsState = {
+  qbvSteps: QbvSteps[];
+  isStarted: boolean;
+  setQbvSteps: (qbvSteps: QbvSteps[]) => void;
+  handleNext: () => void;
+  handlePrevious: () => void;
+  handleStep: (index: number) => void;
+  handleStart: () => void;
+  handleStop: () => void;
+};
+
+export type QbvSteps = {
+  name: string;
+  isCompleted: boolean;
+  isCurrent: boolean;
+  [key: string]: any;
+};

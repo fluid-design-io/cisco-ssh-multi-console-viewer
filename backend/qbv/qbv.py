@@ -10,7 +10,7 @@ from lib.classes import QBVconfig
 from queue import Queue
 
 
-PACKET_COUNT = 100
+PACKET_COUNT = 100000
 
 TIMESTAMPE = datetime.now().strftime("%m-%d-%Y_%H_%M_%S")
 
@@ -67,7 +67,7 @@ def connect_and_exec(device_ip, device_user, device_pw, command):
             f"Failed to connect to device: {e}", type='error')
 
 
-def start_wifi_sniffer(device_ip, device_user, device_pw, tftp_ip, tftp_user, tftp_pw, store='local', folder=FOLDER, queue: Queue = None):
+def start_wifi_sniffer(device_ip, device_user, device_pw, tftp_ip, tftp_user, tftp_pw, tftp=False, output_folder=FOLDER, queue: Queue = None):
     queue.put(nice_print(f"Starting WIFI sniffer", type='info'))
     filename = f"QBV_WIFI__BE__{TIMESTAMPE}.pcap"
     device_config = Config(overrides={"sudo": {
@@ -93,10 +93,10 @@ def start_wifi_sniffer(device_ip, device_user, device_pw, tftp_ip, tftp_user, tf
     queue.put(nice_print(
         f"\n[Download wifi capture](http://localhost:8000/download/{filename}?folder=output/qbv)\n"))
 
-    if store == 'tftp':
+    if tftp:
         # Setup TFTP server
         file_path = upload_to_tftp(
-            tftp_ip, tftp_user, tftp_pw, folder, filename)
+            tftp_ip, tftp_user, tftp_pw, output_folder, filename)
 
     # Delete the pcap file from the device
     wifi_conn.sudo(f"rm -rf ./Desktop/captures/{filename}")
@@ -107,7 +107,7 @@ def start_wifi_sniffer(device_ip, device_user, device_pw, tftp_ip, tftp_user, tf
     return file_path
 
 
-def start_eth_sniffer(device_ip, device_user, device_pw, tftp_ip, tftp_user, tftp_pw, store='local', folder=FOLDER, queue: Queue = None):
+def start_eth_sniffer(device_ip, device_user, device_pw, tftp_ip, tftp_user, tftp_pw, tftp=False, output_folder=FOLDER, queue: Queue = None):
     queue.put(nice_print(f"Starting ETH sniffer", type='info'))
     filename = f"QBV_ETH__BE__{TIMESTAMPE}.pcap"
 
@@ -131,10 +131,10 @@ def start_eth_sniffer(device_ip, device_user, device_pw, tftp_ip, tftp_user, tft
     # Move the local file into output/qbv
     os.rename(filename, f'output/qbv/{filename}')
 
-    if store == 'tftp':
+    if tftp:
         # Setup TFTP server
         file_path = upload_to_tftp(
-            tftp_ip, tftp_user, tftp_pw, folder, filename)
+            tftp_ip, tftp_user, tftp_pw, output_folder, filename)
 
     queue.put(nice_print(
         f"\n[Download eth capture](http://localhost:8000/download/{filename}?folder=output/qbv)\n"))
@@ -148,7 +148,7 @@ def start_eth_sniffer(device_ip, device_user, device_pw, tftp_ip, tftp_user, tft
     return file_path
 
 
-def upload_to_tftp(device_ip, device_user, device_pw, folder, filename=None, tftp_path="/Users/cisco/Desktop/Shared/sniffer"):
+def upload_to_tftp(device_ip, device_user, device_pw, output_folder, filename=None, tftp_path="/Users/cisco/Desktop/Shared/sniffer"):
     """
     Uploads a file to the TFTP server
     1. Connect to TFTP server
@@ -163,17 +163,17 @@ def upload_to_tftp(device_ip, device_user, device_pw, folder, filename=None, tft
     with tftp_conn.cd(tftp_path):
         folders = tftp_conn.run("ls", hide=True)
         lines = folders.stdout.split("\n")
-        if folder not in lines:
-            tftp_conn.run(f"mkdir {folder}")
+        if output_folder not in lines:
+            tftp_conn.run(f"mkdir {output_folder}")
     # Transfer to TFTP server
     # OR os.path.join('output', 'qbv', filename)
     path = f'output/qbv/{filename}'
-    tftp_conn.put(path, tftp_path+"/"+folder)
+    tftp_conn.put(path, tftp_path+"/"+output_folder)
 
     print(
         f"\n\t======\tFile {filename[:4]} captures uploaded to TFTP \t======\t")
 
-    return os.path.join(tftp_path, folder, filename)
+    return os.path.join(tftp_path, output_folder, filename)
 
 
 def qbv_model(config: QBVconfig):
@@ -226,14 +226,16 @@ def qbv_model(config: QBVconfig):
     for command in station_commands:
         yield nice_print(f"Station command {command.command} extracted")
     yield nice_print("Extracting options", type='section')
-    store = config.options.store
-    output_folder = config.options.output
+    time.sleep(1)
+    tftp = config.options.tftp
+    output_folder = config.options.output_folder
     direction = config.options.direction
-    options = [store, output_folder, direction]
+    options = [tftp, output_folder, direction]
     for option in options:
         yield nice_print(f"Option {option} extracted")
     yield nice_print("Extracting config complete", type='info')
     yield nice_print("Generating iperf commands", type='section')
+    time.sleep(1)
     if direction == 'DL':
         yield nice_print("Starting iperf server on wifi device", type='info')
         yield nice_print("Starting iperf client on eth device", type='info')
@@ -245,9 +247,9 @@ def qbv_model(config: QBVconfig):
         yield nice_print("Starting iperf server and client on eth device", type='info')
     yield nice_print("Starting sniffer on sniffer device", type='info')
     yield nice_print("Generating iperf commands complete", type='info')
-    if store == 'local':
+    if tftp:
         yield nice_print("Storing pcap locally", type='info')
-    elif store == 'tftp':
+    else:
         yield nice_print("Storing pcap on tftp server", type='info')
     yield nice_print("QBV test complete", type='section')
     yield nice_print("Returning path to pcap file", type='info')
@@ -264,10 +266,9 @@ def execute_qbv(config: QBVconfig):
     device_tftp = config.device_tftp
     server_commands = config.server_commands
     station_commands = config.station_commands
-    store = config.options.store
+    tftp = config.options.tftp
     direction = config.options.direction
-    output = config.options.output
-    folder = output
+    output_folder = config.options.output_folder
 
     # For each config.commands, create a process
     processes: List[Process] = []
@@ -311,9 +312,9 @@ def execute_qbv(config: QBVconfig):
     # Create sniffer process, both wifi and eth
 
     process_wifi_sniffer = threading.Thread(target=start_wifi_sniffer, args=(
-        device_sniffer.ip, device_sniffer.username, device_sniffer.password, device_tftp.ip, device_tftp.username, device_tftp.password, store, folder, results))
+        device_sniffer.ip, device_sniffer.username, device_sniffer.password, device_tftp.ip, device_tftp.username, device_tftp.password, tftp, output_folder, results))
     process_eth_sniffer = threading.Thread(target=start_eth_sniffer, args=(
-        device_eth.ip, device_eth.username, device_eth.password, device_tftp.ip, device_tftp.username, device_tftp.password, store, folder, results))
+        device_eth.ip, device_eth.username, device_eth.password, device_tftp.ip, device_tftp.username, device_tftp.password, tftp, output_folder, results))
 
     # Start the sniffer process
 

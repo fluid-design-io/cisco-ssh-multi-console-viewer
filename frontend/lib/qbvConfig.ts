@@ -1,4 +1,4 @@
-import { QBVconfig } from 'app/qbv/page';
+import { QBVconfig } from 'app/qbv-legacy/page';
 
 export const defaultConfig: QBVconfig = {
   device_wifi: {

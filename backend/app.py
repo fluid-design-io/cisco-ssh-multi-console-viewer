@@ -6,8 +6,9 @@ from netmiko import ConnectHandler
 import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
 import multiprocessing
-from lib.classes import QBVconfig, DeivceConfig, Device, ExecuteCommand, QBVcommand
+from lib.classes import QBVconfig, DeivceConfig, Device, ExecuteCommand, QBVcommand, QBVApConfig
 from qbv.qbv import execute_qbv, qbv_model
+from qbv.get_ap_time import get_utc_us
 from lib.ap_version_convert import ap_version_convert
 
 from qrcode import make, QRCode
@@ -99,8 +100,12 @@ async def download_file(file_name: str, folder: str = "output"):
 @app.post('/qbv', response_model=str)
 def generate_qbv(qbv_config: QBVconfig):
     # execute_qbv(config=qbv_config)
-    return StreamingResponse(chain(execute_qbv(qbv_config)), media_type='text/plain')
+    return StreamingResponse(chain(qbv_model(qbv_config)), media_type='text/plain')
 
+
+@app.post('/qbv-ap-time', response_model=str)
+def get_qbv_ap_time(qbv_ap_config: QBVApConfig):
+    return get_utc_us(qbv_ap_config)
 # Just for fun, not used in the app
 
 
