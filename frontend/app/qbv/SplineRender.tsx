@@ -10,7 +10,6 @@ export const SplineRender = memo(({ spline, className = '' }: { [key: string]: a
     // save the app in a ref for later use
     spline.current = splineApp;
   };
-  console.log('SplineRender');
   return (
     <Fragment>
       <Box

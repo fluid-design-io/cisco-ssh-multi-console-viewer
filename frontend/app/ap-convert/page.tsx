@@ -56,6 +56,10 @@ altboot_fallback: 1`;
       'application/tar': ['.tar', '.tar.gz', '.tgz'],
     },
     maxFiles: 1,
+    onDragEnter: undefined,
+    onDragLeave: undefined,
+    onDragOver: undefined,
+    multiple: false,
   });
 
   const todayLocalized = new Date()
@@ -175,7 +179,7 @@ altboot_fallback: 1`;
                   { 'border-green-600': fileAccepted }
                 )}
               >
-                <input {...getInputProps()} />
+                <input {...(getInputProps() as any)} />
                 {acceptedFiles.length === 0 &&
                   (isDragActive ? (
                     <p className='text-center text-gray-300'>Drop the files here ...</p>

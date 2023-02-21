@@ -64,7 +64,7 @@ const Page = () => {
     ip: '10.10.12.52',
     username: 'apuser',
     password: 'SecureAP1',
-    enable_password: '',
+    enable_password: 'SecureAP1',
   });
   const [deviceConfigs, setDeviceConfigs] = useState<DeviceConnType[]>(defaultDeviceConnConfig);
   const [serverCommands, setServerCommands] = useState<QBVconfig['server_commands']>([

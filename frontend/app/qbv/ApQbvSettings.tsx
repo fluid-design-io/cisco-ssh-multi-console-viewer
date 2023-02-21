@@ -15,6 +15,7 @@ import {
   Divider,
   Toolbar,
   IconButton,
+  Alert,
 } from '@mui/material';
 import { getHexTime, splitHexIntoHighAndLow } from 'lib/getHexTime';
 import { ApConnType, defaultApConfig, defaultDeviceConnConfig, QbvApConfig } from 'lib/qbvDefaultConfig';
@@ -210,6 +211,7 @@ export const ApQbvSettings = memo(
     const [currentTime, setCurrentTime] = useState(Date.now());
     const [apHexTime, setApHexTime] = useState(undefined); // test 5F4CB19C5B3E4
     const [isGettingApTime, setIsGettingApTime] = useState(false);
+    const [error, setError] = useState('');
     const isActiveStep = currentStep === 0;
     const qbvApValues = qbvApConfig.map((config) => Object.values(config).join(' ').trim());
     const handleChangeQbv = (event, index) => {
@@ -226,15 +228,37 @@ export const ApQbvSettings = memo(
 
     const getApTime = async () => {
       setIsGettingApTime(true);
-      // fake api call
-      await new Promise((resolve) => {
-        setTimeout(() => {
-          const time = '5F4CB19C5B3E4';
-          setApHexTime(time);
+      setError('');
+      const body = JSON.stringify(apConnection);
+      try {
+        const response = await fetch('http://localhost:8000/qbv-ap-time', {
+          method: 'POST',
+          body,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        const data = response.body;
+        if (!data) {
+          throw new Error('No data');
+        }
+        if (data instanceof ReadableStream) {
+          const reader = data.getReader();
+          const { value } = await reader.read();
+          const decoder = new TextDecoder('utf-8');
+          const decodedValue = decoder.decode(value);
+          console.log(decodedValue);
+          if (decodedValue.includes('File not found')) {
+            throw new Error('File not found');
+          }
+          const hexTime = decodedValue.trim();
+          setApHexTime(hexTime);
           setCurrentTime(Date.now());
-          resolve(time);
-        }, 1000);
-      });
+        }
+      } catch (error) {
+        console.log(error);
+        setError(error.message);
+      }
       setTimeout(() => {
         setIsGettingApTime(false);
         spline.current?.emitEvent('mouseDown', 'AP LED On Toggle');
@@ -292,6 +316,12 @@ export const ApQbvSettings = memo(
           <Typography variant='h6' mt={-2} gutterBottom>
             AP Connection
           </Typography>
+          <Collapse in={error !== ''}>
+            <Alert severity='error' sx={{ mb: 2 }}>
+              {error}
+            </Alert>
+          </Collapse>
+
           <Box className='grid grid-cols-2 gap-2 mt-4'>
             {Object.keys(apConnection).map((key) => (
               <TextField

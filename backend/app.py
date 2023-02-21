@@ -6,7 +6,7 @@ from netmiko import ConnectHandler
 import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
 import multiprocessing
-from lib.classes import QBVconfig, DeivceConfig, Device, ExecuteCommand, QBVcommand, QBVApConfig
+from lib.classes import QBVconfig, DeivceConfig, Device, ExecuteCommand, QBVcommand, QBVApConfig, ApConnection
 from qbv.qbv import execute_qbv, qbv_model
 from qbv.get_ap_time import get_utc_us
 from lib.ap_version_convert import ap_version_convert
@@ -105,11 +105,12 @@ def generate_qbv(qbv_config: QBVconfig):
 
 @app.post('/qbv-ap-time', response_model=str)
 def get_qbv_ap_time(qbv_ap_config: QBVApConfig):
-    return get_utc_us(qbv_ap_config)
-# Just for fun, not used in the app
+    ip, username, password, enable_password = qbv_ap_config.ip, qbv_ap_config.username, qbv_ap_config.password, qbv_ap_config.enable_password
+    return get_utc_us(ip, username, password, enable_password)
 
 
 @app.post("/qr-code/")
+# Just for fun, not used in the app
 async def create_qr_code(data: str, options: Dict[str, str] = {}):
     qr = QRCode(error_correction=ERROR_CORRECT_L,
                 box_size=10, border=5

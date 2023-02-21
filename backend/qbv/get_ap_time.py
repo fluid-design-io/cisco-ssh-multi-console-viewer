@@ -31,5 +31,9 @@ def get_utc_us(ip, username, password, enable_password):
         time.sleep(3)
         ssh.write_channel(chr(3))  # Ctrl + C
         output = ssh.read_channel()
-        hexString = extractLastHexString(output)
-        return hexString
+        # if "not found" in output, then the file does not exist
+        if "not found" in output:
+            return "File not found"
+        else:
+            hexString = extractLastHexString(output)
+            return hexString

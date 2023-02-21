@@ -25,7 +25,7 @@ def nice_print(msg, type='default'):
         type (str, optional): The type of message. Defaults to 'info'.
     """
     if type == 'info':
-        return f"\n- {msg}"
+        return f"\n> {msg}"
     elif type == 'error':
         return f"\n**{msg}\t**\n"
     elif type == 'section':
