@@ -46,7 +46,7 @@ class ApConnection(BaseModel):
 
 class QBVconfig(BaseModel):
     ap_connection: ApConnection
-    ap_command: List[str]
+    ap_commands: List[str]
     device_wifi: DeivceConfig
     device_eth: DeivceConfig
     device_tftp: DeivceConfig

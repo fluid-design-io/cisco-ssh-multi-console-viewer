@@ -6,6 +6,7 @@ import threading
 from datetime import datetime
 from fabric import Connection, Config
 from multiprocessing import Process
+from qbv.set_ap_qbv_gate import set_ap_qbv_gate
 from lib.classes import QBVconfig
 from queue import Queue
 
@@ -269,6 +270,8 @@ def execute_qbv(config: QBVconfig):
     tftp = config.options.tftp
     direction = config.options.direction
     output_folder = config.options.output_folder
+    ap_commands = config.ap_commands
+    ap_connection = config.ap_connection
 
     # For each config.commands, create a process
     processes: List[Process] = []
@@ -276,6 +279,12 @@ def execute_qbv(config: QBVconfig):
     results = Queue()
 
     yield nice_print(f"Performing {direction} test", type='h1')
+
+    yield nice_print("Starting config AP Qbv gate", type='h2')
+
+    set_ap_qbv_gate(ap_connection, ap_commands, nice_print)
+
+    yield nice_print("Done config AP Qbv gate", type='h2')
 
     for server_command in server_commands:
         type = server_command.type

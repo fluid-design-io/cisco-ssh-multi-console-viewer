@@ -363,8 +363,8 @@ export const ApQbvSettings = memo(
                       <TextField
                         select
                         key={`${input.name}-${index}`}
-                        name={`${input.name}`}
-                        label={input.label}
+                        name={input.name}
+                        label={input.label.replace('_', ' ').toUpperCase()}
                         value={qbvApConfig[index][input.name]}
                         onChange={(event) => handleChangeQbv(event, index)}
                         variant='outlined'

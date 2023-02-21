@@ -153,7 +153,7 @@ export type QBVOptions = {
 
 export type QBVconfig = {
   ap_connection: ApConnType;
-  ap_command: string[];
+  ap_commands: string[];
   device_wifi: DeviceConnType;
   device_eth: DeviceConnType;
   device_tftp: DeviceConnType;

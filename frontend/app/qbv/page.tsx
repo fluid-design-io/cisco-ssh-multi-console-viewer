@@ -103,7 +103,7 @@ const Page = () => {
 
   const qbvConfig: QBVconfig = {
     ap_connection: apConnection,
-    ap_command: qbvApConfig.map(
+    ap_commands: qbvApConfig.map(
       (config) => 'wifitool apr1v0 setUnitTestCmd 0x47 13 4020 ' + Object.values(config).join(' ').trim()
     ),
     device_wifi: { ...findDeviceByType('wifi') },
