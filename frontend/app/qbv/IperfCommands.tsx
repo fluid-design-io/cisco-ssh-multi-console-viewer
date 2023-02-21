@@ -151,28 +151,27 @@ export const IperfCommands = memo(
                 }}
                 disabled={isStarted}
               />
-              <FormControl sx={{ flexGrow: 1 }}>
-                <TextField
-                  required
-                  id={`qbv-station-command-${index}`}
-                  name={`qbv-station-command-${index}`}
-                  label={`${command.type} Command`}
-                  type='text'
-                  autoComplete='off'
-                  value={command.command}
-                  onChange={(e) => {
-                    const newCommands = [...stationCommands];
-                    newCommands[index].command = e.target.value;
-                    updateStationCommands(newCommands);
-                  }}
-                  disabled={isStarted}
-                  // TODO: add preview of command
-                  // InputProps={{
-                  //   startAdornment: <InputAdornment position='start'>iperf -c {config.device_wifi.ip}</InputAdornment>,
-                  // }}
-                />
-                {/* <FormHelperText>Preview: {getStationIperfCommand(config, command.command)}</FormHelperText> */}
-              </FormControl>
+              <TextField
+                required
+                id={`qbv-station-command-${index}`}
+                name={`qbv-station-command-${index}`}
+                label={`${command.type} Command`}
+                type='text'
+                autoComplete='off'
+                value={command.command}
+                onChange={(e) => {
+                  const newCommands = [...stationCommands];
+                  newCommands[index].command = e.target.value;
+                  updateStationCommands(newCommands);
+                }}
+                disabled={isStarted}
+                fullWidth
+                // TODO: add preview of command
+                // InputProps={{
+                //   startAdornment: <InputAdornment position='start'>iperf -c {config.device_wifi.ip}</InputAdornment>,
+                // }}
+              />
+              {/* <FormHelperText>Preview: {getStationIperfCommand(config, command.command)}</FormHelperText> */}
 
               <IconButton
                 color='inherit'

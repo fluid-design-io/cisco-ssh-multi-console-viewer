@@ -90,6 +90,8 @@ def start_wifi_sniffer(device_ip, device_user, device_pw, tftp_ip, tftp_user, tf
     # Transfer the pcap file to local machine
     wifi_conn.get(f'Desktop/captures/{filename}')
 
+    time.sleep(0.5)
+
     queue.put(nice_print(
         f"\n[Download wifi capture](http://localhost:8000/download/{filename}?folder=output/qbv)\n"))
     # Move the local file into output/qbv
@@ -133,6 +135,8 @@ def start_eth_sniffer(device_ip, device_user, device_pw, tftp_ip, tftp_user, tft
     queue.put(nice_print("Downloading to local machine..."))
     # Transfer the pcap file to local machine
     eth_conn.get(f'Desktop/captures/{filename}')
+
+    time.sleep(0.5)
 
     queue.put(nice_print(
         f"\n[Download eth capture](http://localhost:8000/download/{filename}?folder=output/qbv)\n"))
