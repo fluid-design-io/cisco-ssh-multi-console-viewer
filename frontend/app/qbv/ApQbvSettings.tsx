@@ -382,7 +382,7 @@ export const ApQbvSettings = memo(
                       <TextField
                         key={`${input.name}-${index}`}
                         name={`${input.name}`}
-                        label={input.label}
+                        label={input.label.replace('_', ' ').toUpperCase()}
                         type={input.type}
                         value={qbvApConfig[index][input.name]}
                         onChange={(event) => handleChangeQbv(event, index)}
