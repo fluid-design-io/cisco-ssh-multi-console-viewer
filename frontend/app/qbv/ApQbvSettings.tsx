@@ -364,7 +364,8 @@ export const ApQbvSettings = memo(
                         select
                         key={`${input.name}-${index}`}
                         name={input.name}
-                        label={input.label.replace('_', ' ').toUpperCase()}
+                        // use regex to replace '_' with ' '
+                        label={input.label.replace(/_/g, ' ').toUpperCase()}
                         value={qbvApConfig[index][input.name]}
                         onChange={(event) => handleChangeQbv(event, index)}
                         variant='outlined'
@@ -382,7 +383,7 @@ export const ApQbvSettings = memo(
                       <TextField
                         key={`${input.name}-${index}`}
                         name={`${input.name}`}
-                        label={input.label.replace('_', ' ').toUpperCase()}
+                        label={input.label.replace(/_/g, ' ').toUpperCase()}
                         type={input.type}
                         value={qbvApConfig[index][input.name]}
                         onChange={(event) => handleChangeQbv(event, index)}
