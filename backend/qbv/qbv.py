@@ -88,11 +88,11 @@ def start_wifi_sniffer(device_ip, device_user, device_pw, tftp_ip, tftp_user, tf
     time.sleep(0.5)
     # Transfer the pcap file to local machine
     wifi_conn.get(f'Desktop/captures/{filename}')
-    # Move the local file into output/qbv
-    os.rename(filename, f'output/qbv/{filename}')
 
     queue.put(nice_print(
         f"\n[Download wifi capture](http://localhost:8000/download/{filename}?folder=output/qbv)\n"))
+    # Move the local file into output/qbv
+    os.rename(filename, f'output/qbv/{filename}')
 
     if tftp:
         # Setup TFTP server
@@ -129,6 +129,9 @@ def start_eth_sniffer(device_ip, device_user, device_pw, tftp_ip, tftp_user, tft
     time.sleep(0.5)
     # Transfer the pcap file to local machine
     eth_conn.get(f'Desktop/captures/{filename}')
+
+    queue.put(nice_print(
+        f"\n[Download eth capture](http://localhost:8000/download/{filename}?folder=output/qbv)\n"))
     # Move the local file into output/qbv
     os.rename(filename, f'output/qbv/{filename}')
 
@@ -136,9 +139,6 @@ def start_eth_sniffer(device_ip, device_user, device_pw, tftp_ip, tftp_user, tft
         # Setup TFTP server
         file_path = upload_to_tftp(
             tftp_ip, tftp_user, tftp_pw, output_folder, filename)
-
-    queue.put(nice_print(
-        f"\n[Download eth capture](http://localhost:8000/download/{filename}?folder=output/qbv)\n"))
 
     # Delete the pcap file from the device
     eth_conn.sudo(f"rm -rf ./Desktop/captures/{filename}")
