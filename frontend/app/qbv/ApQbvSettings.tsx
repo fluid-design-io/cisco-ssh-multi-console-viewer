@@ -405,7 +405,7 @@ export const ApQbvSettings = memo(
             Preview
           </Typography>
           <pre className='whitespace-pre-wrap -mt-1'>
-            {qbvApValues.map((value) => 'wifitool apr1v0 setUnitTestCmd 0x47 13 402' + value + '\n')}
+            {qbvApValues.map((value) => 'wifitool apr1v0 setUnitTestCmd 0x47 13 402 ' + value + '\n')}
           </pre>
 
           <GateCycleDoc />
