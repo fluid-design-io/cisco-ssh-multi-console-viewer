@@ -13,8 +13,6 @@ from queue import Queue
 
 PACKET_COUNT = 80000
 
-TIMESTAMPE = datetime.now().strftime("%m-%d-%Y_%H_%M_%S")
-
 FOLDER = f"Captures"
 
 
@@ -69,6 +67,7 @@ def connect_and_exec(device_ip, device_user, device_pw, command):
 
 
 def start_wifi_sniffer(device_ip, device_user, device_pw, tftp_ip, tftp_user, tftp_pw, tftp=False, output_folder=FOLDER, queue: Queue = None):
+    TIMESTAMPE = datetime.now().strftime("%m-%d-%Y_%H_%M_%S")
     queue.put(nice_print(f"Starting WIFI sniffer", type='info'))
     filename = f"QBV_WIFI__BE__{TIMESTAMPE}.pcap"
     device_config = Config(overrides={"sudo": {
@@ -86,6 +85,8 @@ def start_wifi_sniffer(device_ip, device_user, device_pw, tftp_ip, tftp_user, tf
     if not os.path.exists('output/qbv'):
         os.makedirs('output/qbv')
     time.sleep(0.5)
+
+    queue.put(nice_print("Downloading to local machine..."))
     # Transfer the pcap file to local machine
     wifi_conn.get(f'Desktop/captures/{filename}')
 
@@ -109,6 +110,7 @@ def start_wifi_sniffer(device_ip, device_user, device_pw, tftp_ip, tftp_user, tf
 
 
 def start_eth_sniffer(device_ip, device_user, device_pw, tftp_ip, tftp_user, tftp_pw, tftp=False, output_folder=FOLDER, queue: Queue = None):
+    TIMESTAMPE = datetime.now().strftime("%m-%d-%Y_%H_%M_%S")
     queue.put(nice_print(f"Starting ETH sniffer", type='info'))
     filename = f"QBV_ETH__BE__{TIMESTAMPE}.pcap"
 
@@ -127,6 +129,8 @@ def start_eth_sniffer(device_ip, device_user, device_pw, tftp_ip, tftp_user, tft
     if not os.path.exists('output/qbv'):
         os.makedirs('output/qbv')
     time.sleep(0.5)
+
+    queue.put(nice_print("Downloading to local machine..."))
     # Transfer the pcap file to local machine
     eth_conn.get(f'Desktop/captures/{filename}')
 
