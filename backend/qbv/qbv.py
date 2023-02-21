@@ -96,7 +96,7 @@ def start_wifi_sniffer(device_ip, device_user, device_pw, tftp_ip, tftp_user, tf
         f"\n[Download wifi capture](http://localhost:8000/download/{filename}?folder=output/qbv)\n"))
     # Move the local file into output/qbv
     os.rename(filename, f'output/qbv/{filename}')
-
+    file_path = f'output/qbv/{filename}'
     if tftp:
         # Setup TFTP server
         file_path = upload_to_tftp(
