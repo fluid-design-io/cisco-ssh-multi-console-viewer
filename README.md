@@ -14,6 +14,7 @@ pnpm start
 # Backend
 pip install -r requirements.txt
 uvicorn app:app --reload
+# OR python -m uvicorn app:app --reload
 ```
 
 ## Apps
