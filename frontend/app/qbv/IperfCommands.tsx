@@ -160,6 +160,9 @@ export const IperfCommands = memo(
                   newCommands[index].type = e.target.value;
                   updateStationCommands(newCommands);
                 }}
+                sx={{
+                  maxWidth: 140,
+                }}
               />
               <FormControl sx={{ flexGrow: 1 }}>
                 <TextField

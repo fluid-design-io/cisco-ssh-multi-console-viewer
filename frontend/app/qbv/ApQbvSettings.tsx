@@ -246,8 +246,8 @@ export const ApQbvSettings = memo(
           const reader = data.getReader();
           const { value } = await reader.read();
           const decoder = new TextDecoder('utf-8');
-          const decodedValue = decoder.decode(value);
-          console.log(decodedValue);
+          // "5F4CB19C5B3E4" -> 5F4CB19C5B3E4
+          const decodedValue = decoder.decode(value).replace(/"/g, '');
           if (decodedValue.includes('File not found')) {
             throw new Error('File not found');
           }

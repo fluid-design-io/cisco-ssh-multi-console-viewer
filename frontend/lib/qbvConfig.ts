@@ -25,11 +25,11 @@ export const defaultConfig: QBVconfig = {
   server_commands: [
     {
       type: 'BE 5010',
-      command: 'iperf -s -p 5010',
+      command: 'iperf -s -p 5010 -t 60',
     },
     {
       type: 'VI 5020',
-      command: 'iperf -s -p 5020',
+      command: 'iperf -s -p 5020 -t 60',
     },
   ],
   station_commands: [

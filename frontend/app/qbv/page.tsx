@@ -70,21 +70,21 @@ const Page = () => {
   const [serverCommands, setServerCommands] = useState<QBVconfig['server_commands']>([
     {
       type: 'BE 5010',
-      command: 'iperf -s -p 5010',
+      command: 'iperf -s -p 5010 -t 60', // We need to set timeout for the server to close the connection
     },
     {
       type: 'VI 5020',
-      command: 'iperf -s -p 5020',
+      command: 'iperf -s -p 5020 -t 60',
     },
   ]);
   const [stationCommands, setStationCommands] = useState<QBVconfig['station_commands']>([
     {
       type: 'BE',
-      command: 'iperf -c 10.10.12.99 -l 1500 -b 212M -t 15 -i 1 -p 5010',
+      command: 'iperf -c 10.10.12.99 -l 1500 -b 212M -t 55 -i 1 -p 5010', // give a little more time for the server to close the connection
     },
     {
       type: 'VI',
-      command: 'iperf -c 10.10.12.99 -l 128 -b 50pps -t 15 -i 1 -p 5020',
+      command: 'iperf -c 10.10.12.99 -l 128 -b 50pps -t 55 -i 1 -p 5020',
     },
   ]);
   const [qbvOptions, setQbvOptions] = useState<QBVconfig['options']>({
@@ -111,7 +111,7 @@ const Page = () => {
     options: qbvOptions,
   };
 
-  // ! useReducer might be a better option here
+  // TODO: useReducer might be a better option here
   const setStepCompletion = useCallback(
     (step: number, completed: boolean) => {
       const prevQbvSteps = [...qbvSteps];

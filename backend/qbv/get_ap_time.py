@@ -28,7 +28,7 @@ def get_utc_us(ip, username, password, enable_password):
         ssh.write_channel('cd ..\n')
         ssh.write_channel('cd ./storage\n')
         ssh.write_channel('./utc_us.sh\n')
-        time.sleep(3)
+        time.sleep(4)
         ssh.write_channel(chr(3))  # Ctrl + C
         output = ssh.read_channel()
         # if "not found" in output, then the file does not exist
