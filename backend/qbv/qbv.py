@@ -284,6 +284,8 @@ def execute_qbv(config: QBVconfig):
 
     set_ap_qbv_gate(ap_connection, ap_commands, nice_print)
 
+    time.sleep(1)
+
     yield nice_print("Done config AP Qbv gate", type='h2')
 
     for server_command in server_commands:

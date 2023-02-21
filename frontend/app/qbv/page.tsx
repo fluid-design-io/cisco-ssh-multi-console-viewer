@@ -94,7 +94,7 @@ const Page = () => {
   const [qbvOptions, setQbvOptions] = useState<QBVconfig['options']>({
     direction: 'DL',
     tftp: true,
-    output_folder: './output',
+    output_folder: 'output',
   });
 
   const findDeviceByType = (type: DeviceConnType['type']) => {

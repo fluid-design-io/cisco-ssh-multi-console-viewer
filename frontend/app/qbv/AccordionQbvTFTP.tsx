@@ -1,5 +1,15 @@
 import { memo } from 'react';
-import { Accordion, AccordionDetails, AccordionSummary, Box, Stack, Switch, Toolbar, Typography } from '@mui/material';
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Box,
+  Stack,
+  Switch,
+  TextField,
+  Toolbar,
+  Typography,
+} from '@mui/material';
 import { DeviceConnType, QBVconfig } from 'lib/qbvDefaultConfig';
 import { useQbvSteps } from 'lib/useStore';
 import { QbvDevice } from './QbvDevice';
@@ -64,6 +74,20 @@ export const AccordionQbvTFTP = memo(
         </AccordionSummary>
         <AccordionDetails>
           <Box>
+            <TextField
+              required
+              fullWidth
+              id={`tftp_output`}
+              name={`tftp_output`}
+              label={`TFTP Output Folder`}
+              type='text'
+              autoComplete='off'
+              value={qbvOptions.output_folder}
+              onChange={(e) => {
+                setQbvOptions({ ...qbvOptions, output_folder: e.target.value });
+              }}
+              disabled={isStarted}
+            />
             <QbvDevice
               device={deviceConfigs.find((device) => device.type === 'tftp')}
               type='tftp'

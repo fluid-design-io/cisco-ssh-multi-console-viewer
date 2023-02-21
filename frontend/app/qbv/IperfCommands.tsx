@@ -68,6 +68,9 @@ export const IperfCommands = memo(
                   updateServerCommands(newCommands);
                 }}
                 disabled={isStarted}
+                sx={{
+                  maxWidth: 120,
+                }}
               />
               <TextField
                 required
@@ -161,9 +164,6 @@ export const IperfCommands = memo(
                     const newCommands = [...stationCommands];
                     newCommands[index].command = e.target.value;
                     updateStationCommands(newCommands);
-                  }}
-                  sx={{
-                    maxWidth: 120,
                   }}
                   disabled={isStarted}
                   // TODO: add preview of command
