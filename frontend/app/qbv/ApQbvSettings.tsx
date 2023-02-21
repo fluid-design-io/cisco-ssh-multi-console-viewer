@@ -2,7 +2,6 @@ import { LoadingButton } from '@mui/lab';
 import {
   Box,
   TextField,
-  Select,
   MenuItem,
   InputAdornment,
   Accordion,
@@ -11,14 +10,13 @@ import {
   Stack,
   Typography,
   Collapse,
-  Button,
   Divider,
   Toolbar,
   IconButton,
   Alert,
 } from '@mui/material';
 import { getHexTime, splitHexIntoHighAndLow } from 'lib/getHexTime';
-import { ApConnType, defaultApConfig, defaultDeviceConnConfig, QbvApConfig } from 'lib/qbvDefaultConfig';
+import { ApConnType, defaultApConfig, QbvApConfig } from 'lib/qbvDefaultConfig';
 import { useQbvSteps } from 'lib/useStore';
 import { Dispatch, memo, SetStateAction, useEffect, useState } from 'react';
 import { GateCycleDoc } from './GateCycleDoc';
@@ -205,7 +203,7 @@ export const ApQbvSettings = memo(
       payload: any;
     }>;
   }) => {
-    const { qbvSteps, handleStep } = useQbvSteps();
+    const { isStarted, qbvSteps, handleStep } = useQbvSteps();
 
     const currentStep = qbvSteps.findIndex((step) => step.isCurrent);
     const [currentTime, setCurrentTime] = useState(Date.now());
@@ -372,6 +370,7 @@ export const ApQbvSettings = memo(
                         variant='outlined'
                         style={{ marginBottom: 16 }}
                         id={input.name}
+                        disabled={isStarted} // disable when started
                       >
                         {input.options.map((option) => (
                           <MenuItem key={option.value} value={option.value}>
@@ -390,6 +389,7 @@ export const ApQbvSettings = memo(
                         variant='outlined'
                         style={{ marginBottom: 16 }}
                         id={input.name}
+                        disabled={isStarted}
                         InputProps={input?.InputProps || {}}
                         inputProps={input?.inputProps || {}}
                       />

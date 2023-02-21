@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { Accordion, AccordionDetails, AccordionSummary, Box, Stack, Typography } from '@mui/material';
-import { DeviceConnType, QBVcommand, QBVconfig } from 'lib/qbvDefaultConfig';
+import { DeviceConnType } from 'lib/qbvDefaultConfig';
 import { useQbvSteps } from 'lib/useStore';
 import { QbvDevice } from './QbvDevice';
 
@@ -12,7 +12,7 @@ export const AccordionQbvEth = memo(
     deviceConfigs: DeviceConnType[];
     setDeviceConfigs: (deviceConfigs: DeviceConnType[]) => void;
   }) => {
-    const { qbvSteps, handleStep } = useQbvSteps();
+    const { isStarted, qbvSteps, handleStep } = useQbvSteps();
     const currentStep = qbvSteps.findIndex((step) => step.isCurrent);
     const findDeviceByType = (type: DeviceConnType['type']) => {
       return deviceConfigs.find((device) => device.type === type);
@@ -45,6 +45,9 @@ export const AccordionQbvEth = memo(
                   return d;
                 });
                 setDeviceConfigs(newDeviceConfigs);
+              }}
+              inputProps={{
+                disabled: isStarted,
               }}
             />
           </Box>

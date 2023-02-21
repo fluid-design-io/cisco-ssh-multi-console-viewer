@@ -18,7 +18,7 @@ export const AccordionQbvTFTP = memo(
     qbvOptions: QBVconfig['options'];
     setQbvOptions: (qbvOptions: QBVconfig['options']) => void;
   }) => {
-    const { qbvSteps, handleStep } = useQbvSteps();
+    const { isStarted, qbvSteps, handleStep } = useQbvSteps();
     const currentStep = qbvSteps.findIndex((step) => step.isCurrent);
     const findDeviceByType = (type: DeviceConnType['type']) => {
       return deviceConfigs.find((device) => device.type === type);
@@ -75,6 +75,9 @@ export const AccordionQbvTFTP = memo(
                   return d;
                 });
                 setDeviceConfigs(newDeviceConfigs);
+              }}
+              inputProps={{
+                disabled: isStarted,
               }}
             />
           </Box>

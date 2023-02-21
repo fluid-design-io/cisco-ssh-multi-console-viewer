@@ -1,8 +1,8 @@
 'use client';
 
-import { Paper, Box, Typography, AppBar, LinearProgress, Toolbar, IconButton } from '@mui/material';
+import { Paper, Box, IconButton } from '@mui/material';
 import { useCallback, useEffect, useReducer, useRef, useState } from 'react';
-import { QbvStepper, QbvStepperControls } from './QbvStepper';
+import { QbvStepperControls } from './QbvStepper';
 import { useQbvSteps } from 'lib/useStore';
 import { ApQbvSettings, qbvApConfigReducer } from './ApQbvSettings';
 import { ApConnType, defaultApConfig, defaultDeviceConnConfig, DeviceConnType, QBVconfig } from 'lib/qbvDefaultConfig';
@@ -39,10 +39,14 @@ async function getStreamingData({ body, updateData }: { body: string; updateData
     const reader = data.getReader();
     while (true) {
       const { done, value } = await reader.read();
+      // When no more data needs to be consumed, break the reading
       if (done) {
         break;
       }
+      // value for fetch streams is a Uint8Array
       const chunk = new TextDecoder('utf-8').decode(value);
+
+      // Accumulate data and display it
       updateData && updateData(chunk);
     }
   } catch (error) {
@@ -80,11 +84,11 @@ const Page = () => {
   const [stationCommands, setStationCommands] = useState<QBVconfig['station_commands']>([
     {
       type: 'BE',
-      command: 'iperf -c 10.10.12.99 -l 1500 -b 212M -t 55 -i 1 -p 5010', // give a little more time for the server to close the connection
+      command: "'/home/sanjaynuc1/Desktop/iperf' -c 10.10.12.99 -l 1500 -b 212M -t 55 -i 1 -p 5010", // give a little more time for the server to close the connection
     },
     {
       type: 'VI',
-      command: 'iperf -c 10.10.12.99 -l 128 -b 50pps -t 55 -i 1 -p 5020',
+      command: "'/home/sanjaynuc1/Desktop/iperf' -c 10.10.12.99 -l 128 -b 50pps -t 55 -i 1 -p 5020",
     },
   ]);
   const [qbvOptions, setQbvOptions] = useState<QBVconfig['options']>({
@@ -183,17 +187,14 @@ const Page = () => {
     body = JSON.stringify(body);
     try {
       await getStreamingData({ body, updateData });
-      handleStop();
     } catch (error) {
       setErrorText(error.message);
     }
-    setTimeout(() => {
-      setTimeout(() => {
-        // scroll to bottom of the page
-        logPanelRef.current?.scrollTo(0, logPanelRef.current.scrollHeight);
-      }, 300);
-    }, 800);
     handleStop();
+    setTimeout(() => {
+      // scroll to bottom of the page
+      logPanelRef.current?.scrollTo(0, logPanelRef.current.scrollHeight);
+    }, 300);
     return;
   };
 

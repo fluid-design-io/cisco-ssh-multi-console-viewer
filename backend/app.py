@@ -100,7 +100,7 @@ async def download_file(file_name: str, folder: str = "output"):
 @app.post('/qbv', response_model=str)
 def generate_qbv(qbv_config: QBVconfig):
     # execute_qbv(config=qbv_config)
-    return StreamingResponse(chain(qbv_model(qbv_config)), media_type='text/plain')
+    return StreamingResponse(chain(execute_qbv(qbv_config)), media_type='text/plain')
 
 
 @app.post('/qbv-ap-time', response_model=str)

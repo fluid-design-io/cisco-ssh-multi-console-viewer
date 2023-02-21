@@ -10,7 +10,7 @@ from lib.classes import QBVconfig
 from queue import Queue
 
 
-PACKET_COUNT = 100000
+PACKET_COUNT = 80000
 
 TIMESTAMPE = datetime.now().strftime("%m-%d-%Y_%H_%M_%S")
 

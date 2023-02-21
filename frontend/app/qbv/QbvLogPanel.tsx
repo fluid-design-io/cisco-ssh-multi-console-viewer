@@ -23,6 +23,15 @@ export const QbvLogPanel = forwardRef(
     },
     ref
   ) => {
+    const handleExport = () => {
+      const element = document.createElement('a');
+      const file = new Blob([data], { type: 'text/plain' });
+      element.href = URL.createObjectURL(file);
+      element.download = 'qbv-output.txt';
+      document.body.appendChild(element); // Required for this to work in FireFox
+      element.click();
+    };
+
     return (
       <Box
         width={1}
@@ -80,7 +89,7 @@ export const QbvLogPanel = forwardRef(
               <DeleteSweepIcon />
             </IconButton>
             <Box sx={{ flexGrow: 1 }} />
-            <IconButton color='inherit' aria-label='export' disabled={isStarted || !data} onClick={() => null}>
+            <IconButton color='inherit' aria-label='export' disabled={isStarted || !data} onClick={handleExport}>
               <GetAppRoundedIcon />
             </IconButton>
           </Toolbar>

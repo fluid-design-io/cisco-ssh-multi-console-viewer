@@ -1,28 +1,8 @@
-import {
-  Card,
-  AppBar,
-  Toolbar,
-  Typography,
-  Box,
-  IconButton,
-  Stack,
-  TextField,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Collapse,
-  FormHelperText,
-  FormControl,
-  Divider,
-  InputAdornment,
-} from '@mui/material';
-import LaptopIcon from '@mui/icons-material/Laptop';
+import { Toolbar, Typography, Box, IconButton, Stack, TextField, FormControl, Divider } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { memo, useEffect } from 'react';
-import { useQbvCollapsed } from 'lib/useStore';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { memo } from 'react';
+import { useQbvSteps } from 'lib/useStore';
 import { QBVcommand, QBVconfig } from 'lib/qbvDefaultConfig';
 
 export const getStationIperfCommand = (config: QBVconfig, command: string) => {
@@ -47,6 +27,7 @@ export const IperfCommands = memo(
     stationCommands: QBVcommand[];
     updateStationCommands: (commands: QBVcommand[]) => void;
   }) => {
+    const { isStarted } = useQbvSteps();
     return (
       <Box>
         <Toolbar sx={{ px: '0 !important', mt: -2 }}>
@@ -86,6 +67,7 @@ export const IperfCommands = memo(
                   newCommands[index].type = e.target.value;
                   updateServerCommands(newCommands);
                 }}
+                disabled={isStarted}
               />
               <TextField
                 required
@@ -101,6 +83,7 @@ export const IperfCommands = memo(
                   updateServerCommands(newCommands);
                 }}
                 sx={{ flexGrow: 1 }}
+                disabled={isStarted}
               />
 
               <IconButton
@@ -111,7 +94,7 @@ export const IperfCommands = memo(
                   newCommands.splice(index, 1);
                   updateServerCommands(newCommands);
                 }}
-                disabled={serverCommands.length === 1}
+                disabled={serverCommands.length === 1 || isStarted}
               >
                 <DeleteIcon />
               </IconButton>
@@ -161,8 +144,9 @@ export const IperfCommands = memo(
                   updateStationCommands(newCommands);
                 }}
                 sx={{
-                  maxWidth: 140,
+                  maxWidth: 120,
                 }}
+                disabled={isStarted}
               />
               <FormControl sx={{ flexGrow: 1 }}>
                 <TextField
@@ -178,6 +162,10 @@ export const IperfCommands = memo(
                     newCommands[index].command = e.target.value;
                     updateStationCommands(newCommands);
                   }}
+                  sx={{
+                    maxWidth: 120,
+                  }}
+                  disabled={isStarted}
                   // TODO: add preview of command
                   // InputProps={{
                   //   startAdornment: <InputAdornment position='start'>iperf -c {config.device_wifi.ip}</InputAdornment>,
@@ -194,7 +182,7 @@ export const IperfCommands = memo(
                   newCommands.splice(index, 1);
                   updateStationCommands(newCommands);
                 }}
-                disabled={stationCommands.length === 1}
+                disabled={stationCommands.length === 1 || isStarted}
               >
                 <DeleteIcon />
               </IconButton>

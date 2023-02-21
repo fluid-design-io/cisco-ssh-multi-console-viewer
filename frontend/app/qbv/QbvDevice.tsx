@@ -1,15 +1,16 @@
-import { Card, AppBar, Toolbar, Typography, Box, Tooltip, Switch, Stack, TextField } from '@mui/material';
-import Grid2 from '@mui/material/Unstable_Grid2';
+import { Box, TextField } from '@mui/material';
 import { DeviceConnType } from 'lib/qbvDefaultConfig';
 
 export const QbvDevice = ({
   type,
   device,
   updateDevice,
+  inputProps,
 }: {
   type: string;
   device: DeviceConnType;
   updateDevice: (device: DeviceConnType) => void;
+  inputProps?: any;
 }) => {
   return (
     <Box className='grid grid-cols-2 gap-2 xl:grid-cols-4 mt-4'>
@@ -25,6 +26,7 @@ export const QbvDevice = ({
         onChange={(e) => {
           updateDevice({ ...device, ip: e.target.value });
         }}
+        disabled={inputProps?.disabled}
       />
       <TextField
         required
@@ -38,6 +40,7 @@ export const QbvDevice = ({
         onChange={(e) => {
           updateDevice({ ...device, username: e.target.value });
         }}
+        disabled={inputProps?.disabled}
       />
       <TextField
         required
@@ -51,6 +54,7 @@ export const QbvDevice = ({
         onChange={(e) => {
           updateDevice({ ...device, password: e.target.value });
         }}
+        disabled={inputProps?.disabled}
       />
       <TextField
         required
@@ -64,6 +68,7 @@ export const QbvDevice = ({
         onChange={(e) => {
           updateDevice({ ...device, sudo_password: e.target.value });
         }}
+        disabled={inputProps?.disabled}
       />
     </Box>
   );
