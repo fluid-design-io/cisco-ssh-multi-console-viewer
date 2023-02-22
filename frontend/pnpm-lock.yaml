@@ -8,7 +8,7 @@ specifiers:
   '@mui/material': ^5.11.10
   '@next/font': ^13.1.6
   '@splinetool/react-spline': ^2.2.5
-  '@splinetool/runtime': ^0.9.222
+  '@splinetool/runtime': ^0.9.223
   '@tiptap/core': 2.0.0-beta.218
   '@tiptap/extension-bubble-menu': 2.0.0-beta.218
   '@tiptap/extension-highlight': 2.0.0-beta.218
@@ -57,8 +57,8 @@ dependencies:
   '@mui/lab': 5.0.0-alpha.120_2xjz24fcfpl7kgsqfa5xscfeo4
   '@mui/material': 5.11.10_xqeqsl5kvjjtyxwyi3jhw3yuli
   '@next/font': 13.1.6
-  '@splinetool/react-spline': 2.2.5_dnb2ekhnrcvbby5bwsxxplzpkm
-  '@splinetool/runtime': 0.9.222
+  '@splinetool/react-spline': 2.2.5_2gzrfhv2vlqnppq2orbakbj7se
+  '@splinetool/runtime': 0.9.223
   '@tiptap/core': 2.0.0-beta.218_@tiptap+pm@2.0.0-beta.218
   '@tiptap/extension-bubble-menu': 2.0.0-beta.218_p7b6nzxe7qctmzbzapdik3nr64
   '@tiptap/extension-highlight': 2.0.0-beta.218_xixjdlstfbsoyvyes7aewz3ng4
@@ -934,21 +934,21 @@ packages:
     resolution: {integrity: sha512-sXo/qW2/pAcmT43VoRKOJbDOfV3cYpq3szSVfIThQXNt+E4DfKj361vaAt3c88U5tPUxzEswam7GW48PJqtKAg==}
     dev: true
 
-  /@splinetool/react-spline/2.2.5_dnb2ekhnrcvbby5bwsxxplzpkm:
+  /@splinetool/react-spline/2.2.5_2gzrfhv2vlqnppq2orbakbj7se:
     resolution: {integrity: sha512-eAD6+GteOT9S7Z3OdsT/6o6WNYk5NLx48zmHXathdNVdfW/P3npTxEGzEhiM+aMsf2+HbRZx0pX0WHt59HDjlg==}
     peerDependencies:
       '@splinetool/runtime': '*'
       react: '>=17.0.0'
       react-dom: '>=17.0.0'
     dependencies:
-      '@splinetool/runtime': 0.9.222
+      '@splinetool/runtime': 0.9.223
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       react-merge-refs: 1.1.0
     dev: false
 
-  /@splinetool/runtime/0.9.222:
-    resolution: {integrity: sha512-+X5oGKoRPmRXw33sORPfl6rnxyyYOGA9AjAefQy3LfToSBOyL6bs2bfkhGU/WLCM2PxD370hfC91QB34G2UQ0A==}
+  /@splinetool/runtime/0.9.223:
+    resolution: {integrity: sha512-HDNRcgHDO/7xIoZNs+ACQHFgBgAGVKjsXMENxI6HIsjLaC73rsbK3PylXgsfaKV/QtH12mxQO7ykhpY0zHLttw==}
     dependencies:
       on-change: 4.0.2
     dev: false
