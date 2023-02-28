@@ -5,7 +5,14 @@ import { useCallback, useEffect, useReducer, useRef, useState } from 'react';
 import { QbvStepperControls } from './QbvStepper';
 import { useQbvSteps } from 'lib/useStore';
 import { ApQbvSettings, qbvApConfigReducer } from './ApQbvSettings';
-import { ApConnType, defaultApConfig, defaultDeviceConnConfig, DeviceConnType, QBVconfig } from 'lib/qbvDefaultConfig';
+import {
+  ApConnType,
+  defaultApConfig,
+  defaultDeviceConnConfig,
+  DeviceConnType,
+  QbvApConfig,
+  QBVconfig,
+} from 'lib/qbvDefaultConfig';
 import { AccordionQbvSetup } from './AccordionQbvSetup';
 import { AccordionQbvTFTP } from './AccordionQbvTFTP';
 import { AccordionQbvEth } from './AccordionQbvEth';
@@ -54,15 +61,51 @@ async function getStreamingData({ body, updateData }: { body: string; updateData
   }
 }
 
+const getValuesFromLocalStorage = () => {
+  let storedQbvApConfig,
+    storedApConnection,
+    storedDeviceConfigs,
+    storedServerCommands,
+    storedStationCommands,
+    storedQbvOptions;
+  try {
+    storedQbvApConfig = JSON.parse(localStorage.getItem('qbvApConfig') || '[]');
+    storedApConnection = JSON.parse(localStorage.getItem('apConnection') || '{}');
+    storedDeviceConfigs = JSON.parse(localStorage.getItem('deviceConfigs') || '[]');
+    storedServerCommands = JSON.parse(localStorage.getItem('serverCommands') || '[]');
+    storedStationCommands = JSON.parse(localStorage.getItem('stationCommands') || '[]');
+    storedQbvOptions = JSON.parse(localStorage.getItem('qbvOptions') || '{}');
+  } catch (error) {
+    console.error(error);
+  }
+  return [
+    storedQbvApConfig as QbvApConfig[],
+    storedApConnection as ApConnType,
+    storedDeviceConfigs as DeviceConnType[],
+    storedServerCommands as string[],
+    storedStationCommands as string[],
+    storedQbvOptions as QBVconfig['options'],
+  ];
+};
+
 const Page = () => {
   const { qbvSteps, setQbvSteps, isStarted, handleStop } = useQbvSteps();
   const currentStep = qbvSteps.findIndex((step) => step.isCurrent);
+  // get the value from the local storage
+  const [
+    storedQbvApConfig,
+    storedApConnection,
+    storedDeviceConfigs,
+    storedServerCommands,
+    storedStationCommands,
+    storedQbvOptions,
+  ] = getValuesFromLocalStorage();
   const spline = useRef(null);
   const logPanelRef = useRef(null);
   const [data, setData] = useState<string>('');
   const [errorText, setErrorText] = useState('');
   const [showLogPanel, setShowLogPanel] = useState(false);
-  // const [qbvApConfig, setQbvApConfig] = useState<QbvApConfig[]>([defaultApConfig]);
+
   const [qbvApConfig, dispatchQbvApConfig] = useReducer(qbvApConfigReducer, [defaultApConfig]);
   const [apConnection, setApConnection] = useState<ApConnType>({
     ip: '10.10.12.52',

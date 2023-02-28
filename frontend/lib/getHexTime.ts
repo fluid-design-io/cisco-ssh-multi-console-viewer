@@ -18,11 +18,21 @@ export function getHexTime(hexString, startTimestamp) {
 
   return hexValue;
 }
-
-export function splitHexIntoHighAndLow(hexString) {
+/**
+ *
+ * @param hexString - hex string to split
+ * @param offset - offset to apply to the hex string, in seconds
+ * @returns
+ */
+export function splitHexIntoHighAndLow(hexString, offset) {
+  // Convert the hexadecimal string to a decimal number of seconds
+  let seconds = parseInt(hexString, 16);
+  let secondsWithOffset = seconds + offset;
+  // Convert the result back to a hexadecimal string
+  let hexValue = secondsWithOffset.toString(16);
   // Split the hexadecimal string into two parts
-  let utcLowHex = hexString.slice(-8); // last 8 hex digits (low-order bits)
-  let utcHighHex = hexString.slice(0, -8); // the rest (high-order bits)
+  let utcLowHex = hexValue.slice(-8); // last 8 hex digits (low-order bits)
+  let utcHighHex = hexValue.slice(0, -8); // the rest (high-order bits)
 
   // Convert the high-order and low-order hex strings to decimal numbers
   let utcHigh = parseInt(utcHighHex, 16);

@@ -146,11 +146,34 @@ type qbvApDispatchAction = {
   payload: number | string | Record<string, any>;
 };
 
+const apPreconfigurationCommands = `wifitool apr1v1 setUnitTestCmd 0x47 4 170 0 0 2000
+wifitool apr1v1 setUnitTestCmd 0x47 4 170 0 1 2000
+wifitool apr1v1 setUnitTestCmd 0x47 4 170 0 2 2000
+wifitool apr1v1 setUnitTestCmd 0x47 4 170 0 3 2000
+wifitool apr1v1 setUnitTestCmd 0x47 3 267 0 1
+wifitool apr1v1 setUnitTestCmd 0x47 3 267 1 1
+wifitool apr1v1 setUnitTestCmd 0x47 3 267 2 1
+wifitool apr1v1 setUnitTestCmd 0x47 3 267 3 1
+
+cd /sys/kernel/debug/aquantia-phy-0
+echo "0 0x3c600 0x200" > phy-write-reg
+echo "0 0x3c600 0x300" > phy-write-reg
+
+ptp4l -f /storage/ptp4l.conf -i wired0 &
+phc2sys -s wired0 -w &
+tail -f /var/log/messages
+
+iwpriv wifi1 set_utc_info 16
+`;
+
 export const qbvApConfigReducer = (state: QbvApConfig[], action: qbvApDispatchAction) => {
   switch (action.type) {
     case 'SET_UTC_TIME':
-      const hexTime = action.payload;
-      const { utc_high, utc_low } = splitHexIntoHighAndLow(hexTime);
+      if (typeof action.payload === 'string' || typeof action.payload === 'number') {
+        return state;
+      }
+      const { hexTime, offset } = action.payload;
+      const { utc_high, utc_low } = splitHexIntoHighAndLow(hexTime, offset);
       const utcStartTimeHiUs = '0x' + utc_high.toString(16);
       const utcStartTimeLoUs = '0x' + utc_low.toString(16);
       return state.map((apConfig) => ({
@@ -207,6 +230,8 @@ export const ApQbvSettings = memo(
 
     const currentStep = qbvSteps.findIndex((step) => step.isCurrent);
     const [currentTime, setCurrentTime] = useState(Date.now());
+    const [isActivePreConfig, setIsActivePreConfig] = useState(false);
+    const [qbvUtcOffset, setQbvUtcOffset] = useState(5);
     const [apHexTime, setApHexTime] = useState(undefined); // test 5F4CB19C5B3E4
     const [isGettingApTime, setIsGettingApTime] = useState(false);
     const [error, setError] = useState('');
@@ -222,6 +247,13 @@ export const ApQbvSettings = memo(
     const handleApConnChange = (event) => {
       const { name, value } = event.target;
       setApConnection((prevState) => ({ ...prevState, [name]: value }));
+    };
+    const handlePreConfig = async () => {
+      setIsActivePreConfig(true);
+    };
+    const handleQbvUtcOffsetChange = (event) => {
+      const { value } = event.target;
+      setQbvUtcOffset(value);
     };
 
     const getApTime = async () => {
@@ -270,7 +302,7 @@ export const ApQbvSettings = memo(
           const hexTime = getHexTime(apHexTime, currentTime);
           dispatchQbvApConfig({
             type: 'SET_UTC_TIME',
-            payload: hexTime,
+            payload: { hexTime, offset: qbvUtcOffset },
           });
         }, 1000);
         return () => clearInterval(interval);
@@ -311,7 +343,34 @@ export const ApQbvSettings = memo(
           </Collapse>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography variant='h6' mt={-2} gutterBottom>
+          <Toolbar sx={{ px: '0 !important' }}>
+            <Typography variant='h6' flexGrow={1}>
+              Pre Configuration
+            </Typography>
+            <LoadingButton
+              variant='outlined'
+              className='flex-shrink-0'
+              onClick={handlePreConfig}
+              loading={isActivePreConfig}
+            >
+              Start
+            </LoadingButton>
+          </Toolbar>
+          <Box className='mb-4'>
+            <Typography variant='body2' gutterBottom>
+              Use this when the AP is restarted, you do not need to run this every time you run the test.
+            </Typography>
+            <Collapse in={isActivePreConfig}>
+              <Typography variant='body2' gutterBottom>
+                The following commands will be sent to the AP
+              </Typography>
+              <Typography variant='caption' component='pre' gutterBottom>
+                {apPreconfigurationCommands}
+              </Typography>
+            </Collapse>
+          </Box>
+          <Divider sx={{ mb: 1 }} />
+          <Typography variant='h6' gutterBottom>
             AP Connection
           </Typography>
           <Collapse in={error !== ''}>
@@ -344,6 +403,23 @@ export const ApQbvSettings = memo(
               <AddIcon />
             </IconButton>
           </Toolbar>
+          <Box>
+            <Box>
+              <TextField
+                name='qbvUtcOffset'
+                label='Qbv UTC offset'
+                type='number'
+                value={qbvUtcOffset}
+                onChange={handleQbvUtcOffsetChange}
+                variant='outlined'
+                style={{ marginBottom: 16 }}
+                id='qbvUtcOffset'
+                fullWidth
+                helperText='The offset in seconds from UTC time received from AP so the start-time is always in the future'
+                inputProps={{ min: 0, max: 86400 }}
+              />
+            </Box>
+          </Box>
           <Box>
             {qbvApConfig.map((config, index) => (
               <Box key={`qbv-ap-config-${index}`}>
