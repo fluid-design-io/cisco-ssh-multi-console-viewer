@@ -6,6 +6,7 @@ from netmiko import ConnectHandler
 import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
 import multiprocessing
+from qbv.set_ap_qbv_gate import set_ap_qbv_gate
 from lib.classes import QBVconfig, DeivceConfig, Device, ExecuteCommand, QBVcommand, QBVApConfig, ApConnection
 from qbv.qbv import execute_qbv, qbv_model
 from qbv.get_ap_time import get_utc_us
@@ -13,7 +14,7 @@ from lib.ap_version_convert import ap_version_convert
 
 from qrcode import make, QRCode
 from qrcode.constants import ERROR_CORRECT_L
-from typing import Dict
+from typing import Dict, List
 
 from itertools import chain
 
@@ -107,6 +108,11 @@ def generate_qbv(qbv_config: QBVconfig):
 def get_qbv_ap_time(qbv_ap_config: QBVApConfig):
     ip, username, password, enable_password = qbv_ap_config.ip, qbv_ap_config.username, qbv_ap_config.password, qbv_ap_config.enable_password
     return get_utc_us(ip, username, password, enable_password)
+
+
+@app.post('/qbv-ap-commands', response_model=str)
+def get_qbv_ap_time(ap_connection: ApConnection, ap_commands: List[str]):
+    return StreamingResponse(set_ap_qbv_gate(ap_connection, ap_commands), media_type='text/plain')
 
 
 @app.post("/qr-code/")

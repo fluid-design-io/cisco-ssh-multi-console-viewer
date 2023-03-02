@@ -215,6 +215,8 @@ export const ApQbvSettings = memo(
     apConnection,
     dispatchQbvApConfig,
     setApConnection,
+    updateData,
+    setErrorText,
   }: {
     spline: any;
     qbvApConfig: QbvApConfig[];
@@ -224,12 +226,15 @@ export const ApQbvSettings = memo(
       type: string;
       payload: any;
     }>;
+    updateData: (data: any) => void;
+    setErrorText: (text: string) => void;
   }) => {
-    const { isStarted, qbvSteps, handleStep } = useQbvSteps();
+    const { isStarted, qbvSteps, handleStep, handleStart, handleStop } = useQbvSteps();
 
     const currentStep = qbvSteps.findIndex((step) => step.isCurrent);
     const [currentTime, setCurrentTime] = useState(Date.now());
     const [isActivePreConfig, setIsActivePreConfig] = useState(false);
+    const [isSendingApCommands, setIsSendingApCommands] = useState(false);
     const [qbvUtcOffset, setQbvUtcOffset] = useState(5);
     const [apHexTime, setApHexTime] = useState(undefined); // test 5F4CB19C5B3E4
     const [isGettingApTime, setIsGettingApTime] = useState(false);
@@ -315,6 +320,47 @@ export const ApQbvSettings = memo(
       }
       setTimeout(() => {
         setIsActivePreConfig(false);
+      }, 1000);
+    };
+
+    const handleSendApCommands = async () => {
+      handleStart();
+      setIsSendingApCommands(true);
+      const body = JSON.stringify({
+        ap_connection: apConnection,
+        ap_commands: qbvApValues.map((value) => 'wifitool apr1v0 setUnitTestCmd 0x47 13 402' + value),
+      });
+      try {
+        const response = await fetch('http://localhost:8000/qbv-ap-commands', {
+          method: 'POST',
+          body,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        const data = response.body;
+        if (!data) {
+          throw new Error('No data');
+        }
+        const reader = data.getReader();
+        while (true) {
+          const { done, value } = await reader.read();
+          // When no more data needs to be consumed, break the reading
+          if (done) {
+            break;
+          }
+          // value for fetch streams is a Uint8Array
+          const chunk = new TextDecoder('utf-8').decode(value);
+
+          // Accumulate data and display it
+          updateData && updateData(chunk);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+      setTimeout(() => {
+        setIsSendingApCommands(false);
+        handleStop();
       }, 1000);
     };
 
@@ -436,7 +482,6 @@ export const ApQbvSettings = memo(
                 value={qbvUtcOffset}
                 onChange={handleQbvUtcOffsetChange}
                 variant='outlined'
-                style={{ marginBottom: 16 }}
                 id='qbvUtcOffset'
                 fullWidth
                 helperText='The offset in seconds from UTC time received from AP so the start-time is always in the future'
@@ -513,6 +558,20 @@ export const ApQbvSettings = memo(
           </pre>
 
           <GateCycleDoc />
+          <Divider sx={{ my: 1 }} />
+          <Toolbar sx={{ px: '0 !important' }}>
+            <LoadingButton color='warning'>Reset Qbv on AP</LoadingButton>
+            <Box flexGrow={1} />
+            <LoadingButton
+              variant='contained'
+              color='primary'
+              disabled={apHexTime ? false : true}
+              loading={isSendingApCommands}
+              onClick={handleSendApCommands}
+            >
+              Send Commands to AP
+            </LoadingButton>
+          </Toolbar>
         </AccordionDetails>
       </Accordion>
     );

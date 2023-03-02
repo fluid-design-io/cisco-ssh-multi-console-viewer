@@ -301,7 +301,9 @@ const Page = () => {
       </Box>
       <Box className='relative flex flex-col h-full justify-between'>
         <Box p={2} className='flex-grow w-full max-h-[calc(50dvh-72px)] md:max-h-[calc(100dvh-132px)] overflow-auto'>
-          <ApQbvSettings {...{ spline, qbvApConfig, dispatchQbvApConfig, apConnection, setApConnection }} />
+          <ApQbvSettings
+            {...{ spline, qbvApConfig, dispatchQbvApConfig, apConnection, setApConnection, setErrorText, updateData }}
+          />
           <AccordionQbvWiFi
             {...{
               deviceConfigs,
