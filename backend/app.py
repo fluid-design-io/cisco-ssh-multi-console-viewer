@@ -110,6 +110,7 @@ def get_qbv_ap_time(qbv_ap_config: QBVApConfig):
     result = get_utc_us(ip, username, password, enable_password)
     json_result = {}
     json_result['data'] = result
+    print(f"json_result: {json_result}")
     return JSONResponse(content=json_result, media_type="application/json")
 
 
