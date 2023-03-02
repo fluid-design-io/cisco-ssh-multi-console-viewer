@@ -2,7 +2,7 @@ import { Accordion, AccordionDetails, AccordionSummary, Box, Stack, Typography }
 import { QBVcommand, QBVconfig } from 'lib/qbvDefaultConfig';
 import { useQbvSteps } from 'lib/useStore';
 import { Dispatch, SetStateAction, memo } from 'react';
-import { IperfCommands } from './iPerfCommands';
+import { IperfCommands } from './IPerfCommands';
 
 export const AccordionQbvSetup = memo(
   ({
