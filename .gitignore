@@ -2,4 +2,4 @@
 
 /backend/output
 __pycache__
-/frontend/.pnpm-lock.yaml
+/frontend/pnpm-lock.yaml
