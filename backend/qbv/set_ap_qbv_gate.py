@@ -21,10 +21,13 @@ def set_ap_qbv_gate(ap_connection: QBVApConfig, ap_commands: list[str], nice_pri
     }
     with ConnectHandler(**conn) as ssh:
         ssh.enable()
+        time.sleep(0.5)
         ssh.write_channel('dev\n')
+        time.sleep(0.5)
         # Reset wifitool
         ssh.write_channel(
             'wifitool apr1v0 setUnitTestCmd 0x47 13 402 0 0 0 0xfc564edd 0x5f4c4 0 0 0 0 0 0 0 \n')
+        time.sleep(0.5)
         # Set QBV gate
         for command in ap_commands:
             if stream:
