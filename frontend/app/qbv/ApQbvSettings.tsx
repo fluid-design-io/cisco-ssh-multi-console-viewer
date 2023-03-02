@@ -326,10 +326,15 @@ export const ApQbvSettings = memo(
     const handleSendApCommands = async () => {
       handleStartApCommands();
       setIsSendingApCommands(true);
+      const ap_commands = qbvApValues.map((value) => 'wifitool apr1v0 setUnitTestCmd 0x47 13 402' + value);
       const body = JSON.stringify({
         ap_connection: apConnection,
-        ap_commands: qbvApValues.map((value) => 'wifitool apr1v0 setUnitTestCmd 0x47 13 402' + value),
+        ap_commands,
       });
+      for (let index = 0; index < ap_commands.length; index++) {
+        const element = ap_commands[index];
+        updateData(`Sending command ${index + 1} of ${ap_commands.length}: ${element}`);
+      }
       try {
         const response = await fetch('http://localhost:8000/qbv-ap-commands', {
           method: 'POST',
@@ -338,23 +343,12 @@ export const ApQbvSettings = memo(
             'Content-Type': 'application/json',
           },
         });
-        const data = response.body;
+        // jsonfy the response
+        const data = await response.json();
         if (!data) {
           throw new Error('No data');
         }
-        const reader = data.getReader();
-        while (true) {
-          const { done, value } = await reader.read();
-          // When no more data needs to be consumed, break the reading
-          if (done) {
-            break;
-          }
-          // value for fetch streams is a Uint8Array
-          const chunk = new TextDecoder('utf-8').decode(value);
-
-          // Accumulate data and display it
-          updateData && updateData(chunk);
-        }
+        updateData(data);
       } catch (error) {
         console.log(error);
       }

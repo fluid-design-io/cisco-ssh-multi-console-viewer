@@ -232,6 +232,12 @@ const Page = () => {
     }
   }, [handleStart]);
 
+  useEffect(() => {
+    if (isStarted) {
+      setShowLogPanel(true);
+    }
+  }, [isStarted]);
+
   // store each config in local storage
   useEffect(() => {
     // ignore if the config is the same as the one in local storage, if exists

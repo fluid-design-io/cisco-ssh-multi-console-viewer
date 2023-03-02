@@ -34,6 +34,8 @@ def set_ap_qbv_gate(ap_connection: QBVApConfig, ap_commands: list[str], nice_pri
         output = ssh.read_channel()
         yield nice_print(f'Output: {output}')
 
+    return output
+
 
 def reset_ap_qbv_gate(ap_connection: QBVApConfig, nice_print=print):
     ip, username, password, enable_password = ap_connection.ip, ap_connection.username, ap_connection.password, ap_connection.enable_password

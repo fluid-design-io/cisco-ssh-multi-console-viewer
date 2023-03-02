@@ -1,7 +1,7 @@
 
 import os
 from fastapi import FastAPI, File, UploadFile, Form, Response, Request
-from fastapi.responses import FileResponse, StreamingResponse
+from fastapi.responses import FileResponse, StreamingResponse, JSONResponse
 from netmiko import ConnectHandler
 import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
@@ -112,7 +112,7 @@ def get_qbv_ap_time(qbv_ap_config: QBVApConfig):
 
 @app.post('/qbv-ap-commands', response_model=str)
 def get_qbv_ap_time(ap_connection: ApConnection, ap_commands: List[str]):
-    return StreamingResponse(set_ap_qbv_gate(ap_connection, ap_commands), media_type='text/plain')
+    return JSONResponse(content=set_ap_qbv_gate(ap_connection, ap_commands))
 
 
 @app.post("/qr-code/")
