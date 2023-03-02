@@ -272,20 +272,17 @@ export const ApQbvSettings = memo(
             'Content-Type': 'application/json',
           },
         });
-        const data = response.body;
+        const data = await response.json();
         if (!data) {
           throw new Error('No data');
         }
-        if (data instanceof ReadableStream) {
-          const reader = data.getReader();
-          const { value } = await reader.read();
-          const decoder = new TextDecoder('utf-8');
+        if (data.data) {
           // "5F4CB19C5B3E4" -> 5F4CB19C5B3E4
-          const decodedValue = decoder.decode(value).replace(/"/g, '');
-          if (decodedValue.includes('File not found')) {
+          const value = data.data.replace(/"/g, '');
+          if (value.includes('File not found')) {
             throw new Error('File not found');
           }
-          const hexTime = decodedValue.trim();
+          const hexTime = value.trim();
           setApHexTime(hexTime);
           setCurrentTime(Date.now());
         }
@@ -310,7 +307,7 @@ export const ApQbvSettings = memo(
             'Content-Type': 'application/json',
           },
         });
-        const data = response.body;
+        const data = await response.json();
         if (!data) {
           throw new Error('No data');
         }
