@@ -29,9 +29,8 @@ const inputProps = [
     label: 'radio_id',
     type: 'select',
     options: [
-      { value: 0, label: '2.4 GHz' },
-      { value: 1, label: '5 GHz' },
-      { value: 2, label: 'VAP' },
+      { value: 0, label: '5 GHz' },
+      { value: 1, label: '2.4 GHz' },
     ],
   },
   {
