@@ -369,13 +369,14 @@ export const ApQbvSettings = memo(
         <AccordionDetails>
           <Toolbar sx={{ px: '0 !important' }}>
             <Typography variant='h6' flexGrow={1}>
-              Pre Configuration
+              Pre Configuration (In development)
             </Typography>
             <LoadingButton
               variant='outlined'
               className='flex-shrink-0'
               onClick={handlePreConfig}
               loading={isActivePreConfig}
+              disabled={true}
             >
               Start
             </LoadingButton>
@@ -441,6 +442,9 @@ export const ApQbvSettings = memo(
                 fullWidth
                 helperText='The offset in seconds from UTC time received from AP so the start-time is always in the future'
                 inputProps={{ min: 0, max: 86400 }}
+                InputProps={{
+                  endAdornment: <InputAdornment position='end'>seconds</InputAdornment>,
+                }}
               />
             </Box>
           </Box>
