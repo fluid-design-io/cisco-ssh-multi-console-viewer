@@ -32,9 +32,6 @@ def set_ap_qbv_gate(ap_connection: QBVApConfig, ap_commands: list[str], nice_pri
             ssh.write_channel(command + '\n')
             time.sleep(1)
         ssh.write_channel(chr(3))  # Ctrl + C
-        output = ssh.read_channel()
-        if stream:
-            yield nice_print(f'Output: {output}')
     if stream:
         return
     return f"\n### Done setting QBV gate for {ip}\n\n------\n\n"
