@@ -97,7 +97,7 @@ const getValuesFromLocalStorage = () => {
 };
 
 const Page = () => {
-  const { qbvSteps, setQbvSteps, isStarted, handleStop } = useQbvSteps();
+  const { qbvSteps, setQbvSteps, isStarted, handleStop, handleStart } = useQbvSteps();
   const currentStep = qbvSteps.findIndex((step) => step.isCurrent);
   // get the value from the local storage
   const {
@@ -230,7 +230,7 @@ const Page = () => {
     if (isStarted) {
       startQbvTest();
     }
-  }, [isStarted]);
+  }, [handleStart]);
 
   // store each config in local storage
   useEffect(() => {

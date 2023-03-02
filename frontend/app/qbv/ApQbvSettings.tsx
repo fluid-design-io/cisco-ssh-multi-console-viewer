@@ -229,7 +229,7 @@ export const ApQbvSettings = memo(
     updateData: (data: any) => void;
     setErrorText: (text: string) => void;
   }) => {
-    const { isStarted, qbvSteps, handleStep, handleStart, handleStop } = useQbvSteps();
+    const { isStarted, qbvSteps, handleStep, handleStartApCommands, handleStopApCommands } = useQbvSteps();
 
     const currentStep = qbvSteps.findIndex((step) => step.isCurrent);
     const [currentTime, setCurrentTime] = useState(Date.now());
@@ -324,7 +324,7 @@ export const ApQbvSettings = memo(
     };
 
     const handleSendApCommands = async () => {
-      handleStart();
+      handleStartApCommands();
       setIsSendingApCommands(true);
       const body = JSON.stringify({
         ap_connection: apConnection,
@@ -360,7 +360,7 @@ export const ApQbvSettings = memo(
       }
       setTimeout(() => {
         setIsSendingApCommands(false);
-        handleStop();
+        handleStopApCommands();
       }, 1000);
     };
 
