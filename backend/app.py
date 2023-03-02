@@ -112,7 +112,7 @@ def get_qbv_ap_time(qbv_ap_config: QBVApConfig):
 
 @app.post('/qbv-ap-commands', response_model=str)
 def get_qbv_ap_time(ap_connection: ApConnection, ap_commands: List[str]):
-    return JSONResponse(content=set_ap_qbv_gate(ap_connection, ap_commands))
+    return JSONResponse(content=set_ap_qbv_gate(ap_connection, ap_commands, stream=False))
 
 
 @app.post("/qr-code/")
