@@ -127,6 +127,41 @@ export const defaultDeviceConnConfig: DeviceConnType[] = [
   },
 ];
 
+export const defaultApConnection: ApConnType = {
+  ip: '10.10.12.52',
+  username: 'apuser',
+  password: 'SecureAP1',
+  enable_password: 'SecureAP1',
+};
+
+export const defaultServerCommands = [
+  {
+    type: 'BE 5010',
+    command: 'iperf -s -p 5010 -t 60', // We need to set timeout for the server to close the connection
+  },
+  {
+    type: 'VI 5020',
+    command: 'iperf -s -p 5020 -t 60',
+  },
+];
+
+export const defaultStationCommands = [
+  {
+    type: 'BE',
+    command: "'/home/sanjaynuc1/Desktop/iperf' -c 10.10.12.99 -l 1500 -b 212M -t 55 -i 1 -p 5010", // give a little more time for the server to close the connection
+  },
+  {
+    type: 'VI',
+    command: "'/home/sanjaynuc1/Desktop/iperf' -c 10.10.12.99 -l 128 -b 50pps -t 55 -i 1 -p 5020",
+  },
+];
+
+export const defaultQbvOptions: QBVOptions = {
+  direction: 'DL',
+  tftp: false,
+  output_folder: 'output',
+};
+
 export type ApConnType = {
   ip: string;
   username: string;

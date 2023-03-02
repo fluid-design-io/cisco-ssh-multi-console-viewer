@@ -295,6 +295,30 @@ export const ApQbvSettings = memo(
       }, 1000);
     };
 
+    const handleApPreConfig = async () => {
+      setIsActivePreConfig(true);
+      const body = JSON.stringify(apConnection);
+      try {
+        const response = await fetch('http://localhost:8000/qbv-ap-pre-config', {
+          method: 'POST',
+          body,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        const data = response.body;
+        if (!data) {
+          throw new Error('No data');
+        }
+        console.log(data);
+      } catch (error) {
+        console.log(error);
+      }
+      setTimeout(() => {
+        setIsActivePreConfig(false);
+      }, 1000);
+    };
+
     // start the 1 second interval when getApTime is called
     useEffect(() => {
       if (apHexTime) {

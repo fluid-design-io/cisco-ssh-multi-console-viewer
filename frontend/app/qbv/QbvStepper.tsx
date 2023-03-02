@@ -11,8 +11,7 @@ import { AppBar, Toolbar } from '@mui/material';
 export const QbvStepper = ({ spline, triggers }: { spline: any; triggers: any[] }) => {
   const { qbvSteps, handleStep } = useQbvSteps();
   const currentStep = qbvSteps.findIndex((step) => step.isCurrent);
-  // ! This version of Spline is not working properly, need to wait for a fix
-  /* useEffect(() => {
+  useEffect(() => {
     if (spline.current && triggers[currentStep]) {
       spline.current.emitEvent('mouseDown', triggers[currentStep]);
     }
@@ -23,7 +22,7 @@ export const QbvStepper = ({ spline, triggers }: { spline: any; triggers: any[] 
       spline?.current?.emitEvent('mouseDown', triggers[0]);
     }, 1500);
     return () => clearTimeout(timer);
-  }, []); */
+  }, []);
   return (
     <Box sx={{ width: '100%' }} className='pt-4 md:pt-0 md:absolute md:bottom-4 md:inset-x-0 z-10'>
       <Stepper nonLinear alternativeLabel activeStep={currentStep}>
