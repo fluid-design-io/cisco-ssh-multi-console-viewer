@@ -37,7 +37,7 @@ def set_ap_qbv_gate(ap_connection: QBVApConfig, ap_commands: list[str], nice_pri
             yield nice_print(f'Output: {output}')
     if stream:
         return
-    return output
+    return f"\n### Done setting QBV gate for {ip}\n\n------\n\n"
 
 
 def reset_ap_qbv_gate(ap_connection: QBVApConfig, nice_print=print):
