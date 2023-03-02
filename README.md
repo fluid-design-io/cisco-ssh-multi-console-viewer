@@ -6,6 +6,8 @@ A web app that allows you to automate many task in a beautiful effeciant way. It
 
 ## Installation
 
+Windows pnpm install: https://pnpm.io/6.x/installation#:~:text=If%20you%27re%20on%20Windows%2C%20run%20this%20command%20in,pnpm%20again%20and%20it%20should%20work%20as%20expected.
+
 ```bash
 # Frontend
 pnpm && pnpm build
@@ -20,11 +22,11 @@ uvicorn app:app --reload
 
 ## Apps
 
-| App                                                                                          | Description                                                                                        |
-| -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| SSH multi-console viewer                                                                     | A web-based SSH multi-console viewer that allows you to connect to multiple devices at once.       |
-| A web-based SSH multi-console viewer that allows you to connect to multiple devices at once. | A web-based AP version converter that allows you to convert AP version from one format to another. |
-| Qbv Test automation | Test Qbv automation with 5 devices at the same time, generating .pcap report and download to local machine/upload to tftp server in one click |
+| App                                                                                          | Description                                                                                                                                   |
+| -------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| SSH multi-console viewer                                                                     | A web-based SSH multi-console viewer that allows you to connect to multiple devices at once.                                                  |
+| A web-based SSH multi-console viewer that allows you to connect to multiple devices at once. | A web-based AP version converter that allows you to convert AP version from one format to another.                                            |
+| Qbv Test automation                                                                          | Test Qbv automation with 5 devices at the same time, generating .pcap report and download to local machine/upload to tftp server in one click |
 
 ## Features
 
