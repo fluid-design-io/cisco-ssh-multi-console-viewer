@@ -5,11 +5,11 @@ import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
 import Link from 'next/link';
 
 const projects = [
-  {
-    title: 'SSH multi-console viewer',
-    description: 'A web-based SSH multi-console viewer that allows you to connect to multiple devices at once.',
-    href: 'ssh',
-  },
+  // {
+  //   title: 'SSH multi-console viewer',
+  //   description: 'A web-based SSH multi-console viewer that allows you to connect to multiple devices at once.',
+  //   href: 'ssh',
+  // },
   {
     title: 'AP version converter',
     description: 'A web-based AP version converter that allows you to convert AP version from one format to another.',
