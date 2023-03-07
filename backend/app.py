@@ -108,7 +108,7 @@ def generate_qbv(qbv_config: QBVconfig):
 def get_qbv_ap_time(qbv_ap_config: QBVApConfig):
     ip, username, password, enable_password = qbv_ap_config.ip, qbv_ap_config.username, qbv_ap_config.password, qbv_ap_config.enable_password
     result = get_utc_us(ip, username, password, enable_password)
-    print(f"result: {result}")
+    # print(f"result: {result}")
     return JSONResponse(content={'data': result}, media_type="application/json")
 
 

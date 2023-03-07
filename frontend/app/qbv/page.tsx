@@ -230,7 +230,7 @@ const Page = () => {
     if (isStarted) {
       startQbvTest();
     }
-  }, [handleStart]);
+  }, [handleStart()]);
 
   useEffect(() => {
     if (isStarted) {
