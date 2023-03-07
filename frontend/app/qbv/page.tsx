@@ -227,9 +227,10 @@ const Page = () => {
 
   useEffect(() => {
     if (isStarted) {
+      process.env.NODE_ENV === 'development' && console.log('starting test');
       startQbvTest();
     }
-  }, [handleStartQbvTest]);
+  }, [handleStartQbvTest()]);
 
   useEffect(() => {
     if (isStarted) {
