@@ -100,6 +100,12 @@ export const useQbvSteps = create<QbvStepsState>((set) => ({
     // set isStarted to false
     set((state: { isStarted: boolean }) => ({ isStarted: false }));
   },
+  handleStartQbvTest: () => {
+    set((state: { qbvSteps: QbvSteps[] }) => ({ isStarted: true }));
+  },
+  handleStopQbvTest: () => {
+    set((state: { qbvSteps: QbvSteps[] }) => ({ isStarted: false }));
+  },
   handleStartApCommands: () => {
     set((state: { isStarted: boolean }) => ({ isStarted: true }));
   },
@@ -119,6 +125,8 @@ export type QbvStepsState = {
   handleStop: () => void;
   handleStartApCommands: () => void;
   handleStopApCommands: () => void;
+  handleStartQbvTest: () => void;
+  handleStopQbvTest: () => void;
 };
 
 export type QbvSteps = {

@@ -47,7 +47,7 @@ export const QbvStepper = ({ spline, triggers }: { spline: any; triggers: any[] 
 };
 
 export const QbvStepperControls = ({ className = '' }: { className?: string }) => {
-  const { qbvSteps, handleNext, handlePrevious, handleStart, handleStop, isStarted } = useQbvSteps();
+  const { qbvSteps, handleNext, handlePrevious, handleStartQbvTest, handleStopQbvTest, isStarted } = useQbvSteps();
   const totalSteps = qbvSteps.length;
   const currentStep = qbvSteps.findIndex((step) => step.isCurrent);
   const isEveryStepCompleted = qbvSteps.every((step) => step.isCompleted);
@@ -64,7 +64,7 @@ export const QbvStepperControls = ({ className = '' }: { className?: string }) =
               color={qbvSteps.slice(0, 3).every((step) => step.isCompleted) ? 'success' : 'primary'}
               variant='contained'
               disabled={!qbvSteps.slice(0, 3).every((step) => step.isCompleted)}
-              onClick={isStarted ? handleStop : handleStart}
+              onClick={isStarted ? handleStopQbvTest : handleStartQbvTest}
             >
               {isStarted ? 'Stop' : 'Start'}
             </Button>
