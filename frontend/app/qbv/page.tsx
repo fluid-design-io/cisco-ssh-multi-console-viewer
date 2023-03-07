@@ -1,6 +1,6 @@
 'use client';
 
-import { Paper, Box, IconButton } from '@mui/material';
+import { Paper, Box } from '@mui/material';
 import { useCallback, useEffect, useReducer, useRef, useState } from 'react';
 import { QbvStepperControls } from './QbvStepper';
 import { useQbvSteps } from 'lib/useStore';
@@ -14,7 +14,6 @@ import {
   defaultServerCommands,
   defaultStationCommands,
   DeviceConnType,
-  QbvApConfig,
   QBVconfig,
 } from 'lib/qbvDefaultConfig';
 import { AccordionQbvSetup } from './AccordionQbvSetup';
@@ -45,6 +44,7 @@ async function getStreamingData({ body, updateData }: { body: string; updateData
       },
     });
     const data = response.body;
+    process.env.NODE_ENV === 'development' && console.log('data', data);
     if (!data) {
       throw new Error('No data');
     }
@@ -219,7 +219,6 @@ const Page = () => {
       // scroll to bottom of the page
       logPanelRef.current?.scrollTo(0, logPanelRef.current.scrollHeight);
     }, 300);
-    return;
   };
 
   useEffect(() => {
